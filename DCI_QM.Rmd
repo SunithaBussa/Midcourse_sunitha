@@ -46,12 +46,15 @@ str(summary_wds)
 ```{r}
 summary(summary_wds)
 ```
+```{r}
+summary(summary_wds$payment)
+```
 
 ```{r}
 summary_wds %>% 
   ggplot(aes(x=payment)) +
   geom_histogram(breaks = seq(500,100000,by=1000),
-                 bins=10,
+                 bins=20,
                  col="red",
                  fill = "green",
                  alpha = 0.2) +
@@ -74,7 +77,7 @@ change_increase$patient_id <- as.factor(change_increase$patient_id)
 ```
 
 ```{r}
-change_increase <- change_increase %>% 
+ change_increase %>% 
   filter (patient_id == '403675')
 ```
 
@@ -134,12 +137,12 @@ year_plot
 ```
 
 ```{r}
+#redo this with non summarize raw data
 
-
-plbox <- ggplot(year_plot,aes(y=sum_pay, x = dos_month) +
+plbox <- ggplot(year_plot,aes(y=sum_pay, x = dos_month) )+
   geom_boxplot() +
   labs(x="Months", y= "Payments") +
-  ggtitle("Total payments increase in each month in 2018")
+  ggtitle("T")
        
 plbox
  
@@ -208,6 +211,8 @@ all_payments
 ```
 
 ```{r}
+#redo  with box plot
+
 pl_all<- ggplot(all_payments,aes(x=dos_month, y = payments, fill = payment_type)) +
       geom_col(stat = "identity",position = 'dodge') +
       geom_hline(yintercept = 6000, linetype = "dashed",color = "darkred") +
@@ -227,7 +232,9 @@ names(dci_data)
 ```
 ```{r}
 dci_data<-dci_data %>% 
-select(-esco_id,-bene_hic_num,-full_encounter,-phys_neph,-phys_hosp,-phys_ed,-ambulance,-phys_other,-esco_aligned_flag,-inpatient_fluid,-outpatient_er_fluid,-part_a_other_fluid,-patient_id_1,-dos_yyyy,-dos_month,-esrd_date,-hgb_date,-tsat_date,-ferr_date,-albumin_date,-pth_date,-ca_date,
-       -cca_date,-ph_date,-k_date,-urr_date,-ktv_date)
+select(-esco_id,-bene_hic_num,-full_encounter,-phys_neph,-phys_hosp,-phys_ed,-ambulance,-phys_other,-esco_aligned_flag,-inpatient_fluid,-outpatient_er_fluid,-part_a_other_fluid,-patient_id_1,-dos_yyyy,-dos_month,-esrd_date,-hgb_date,-tsat_date,-ferr_date,-albumin_date,-pth_date,-ca_date,-cca_date,-ph_date,-k_date,-urr_date,-ktv_date,-epo_given,-venofer_wasted,-inpatient_access,-outpatient_er_access,-part_a_other_access,-dci_claims,-non_dci_claims,-hha,-hospice,-dme,-start_date,-end_date,-epo_ceiling,-route_freq,-drug_name,-ferritin_cutoff,-tsat_cutoff,-hgb_cutoff,-ferrlecit_wasted,-zemplar_iv_wasted,-calcijex_iv_wasted,-feraheme_wasted,-hectorol_iv_wasted,-tx_missed)
 ```
 
+```{r}
+names(dci_data)
+```
