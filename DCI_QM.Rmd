@@ -14,17 +14,24 @@ options(scipen = 999)
 library(tidyverse)
 library(ggplot2)
 library(plotly)
+library(data.table)
 ```
 
 ```{r}
+#Get only the Summary data for some initial analysis
+
 summary_raw_data<-read_csv ('data/claim_summary_v1.csv' )
 summary_wds<-summary_raw_data
 ```
+```{r}
+#Get the data with all the required fields for analysis
+#claim_detail_raw_data<-fread("data/claim_details.csv",sep = "|",fill = T)
 
+detail_raw_data<-read_csv ('data/claim_details.csv' )
+```
+INITIAL ANALYSIS WITH THE SUMMARY DATA ONLY.
  
 ```{r}
-#claim_summary_raw<-read_csv('data/claim_summary.csv')
-#811454
 
 summary_wds %>% 
   select (-esco_id,-bene_hic_num,-esco_aligned_flag) %>% 
@@ -63,7 +70,24 @@ change_increase<-summary_wds %>%
   arrange (num_of_months,patient_id,dos_year,desc(sum_payment)) 
 
 
-change_increase
+change_increase$patient_id <- as.factor(change_increase$patient_id)
+```
+
+```{r}
+change_increase <- change_increase %>% 
+  filter (patient_id == '403675')
+```
+
+```{r}
+change_increase$patient_id <- as.factor(change_increase$patient_id )
+change_increase$dos_year <- as.factor(change_increase$dos_year)
+
+pl <- ggplot( change_increase,aes(y=sum_payment, x = patient_id ,fill=dos_year)) +
+  geom_bar(stat = "identity",position = 'dodge') +
+  labs(x="patient_id", y= "Payments") +
+  ggtitle("yearly payments difference for patients")
+       
+pl
 
 ```
 
@@ -76,12 +100,11 @@ expensive_patients<-pivot_wider(change_increase,
                                 values_fill = list(sum_payment = 0)) %>% 
           mutate(percent_change = (`2018`-`2017`)/`2017` * 100) %>% 
           filter(percent_change > 50 & `2017` != 0) %>% 
-          arrange (desc(percent_change))  
-          
-   
-  
-       
+          arrange (desc(percent_change))
+
+expensive_patients
 ```
+
 
 ```{r}
 summary_wds %>% 
@@ -110,13 +133,29 @@ year_plot
   
 ```
 
+```{r}
+
+
+plbox <- ggplot(year_plot,aes(y=sum_pay, x = dos_month) +
+  geom_boxplot() +
+  labs(x="Months", y= "Payments") +
+  ggtitle("Total payments increase in each month in 2018")
+       
+plbox
+ 
+```
+
+
 Add a new chunk by clicking the *Insert Chunk* button on the toolbar or by pressing *Cmd+Option+I*.
 
 When you save the notebook, an HTML file containing the code and output will be saved alongside it (click the *Preview* button or press *Cmd+Shift+K* to preview the HTML file). 
 
 The preview shows you a rendered HTML copy of the contents of the editor. Consequently, unlike *Knit*, *Preview* does not run any R code chunks. Instead, the output of the chunk when it was last run in the editor is displayed.
+
+
+
 ```{r}
-summary_wds %>% 
+summary_2017<-summary_wds %>% 
   group_by(dos_month,dos_year) %>% 
   summarise(
             total_patients = NROW(patient_id),
@@ -124,11 +163,71 @@ summary_wds %>%
             min_pay = min(payment),
             max_pay = max(payment),
             avg_pay = sum(payment)/NROW(patient_id)) %>% 
-  ungroup() %>% 
+  ungroup() %>%
   arrange(dos_year,dos_month) %>% 
+  filter(dos_year =="2017")
+
+summary_2017
+```
+
+```{r}
+summary_2017_pivot <- summary_2017 %>% 
+                      pivot_longer(min_pay:avg_pay, names_to = "payment_type", values_to = "payment")
+
+summary_2017_pivot$dos_month = as.factor(summary_2017_pivot$dos_month)
+
+summary_2017_pivot
+
+```
+
+```{r}
+ 
+pl<- ggplot(summary_2017_pivot,aes(x=dos_month, y = payment, fill = payment_type)) +
+      geom_col(stat = "identity",position = 'dodge') +
+      geom_hline(yintercept = 6000, linetype = "dashed",color = "darkred") +
+      labs(x="Months", y = "Payments") +
+      ggtitle("2017 minimum, maximum and average payments")
+
+pl + scale_y_continuous(breaks = seq(0,130000,5000))
+ 
   
+```
+```{r}
+all_payments<-summary_wds %>% 
+  group_by(dos_month) %>% 
+  summarise(
+            total_patients = NROW(patient_id),
+            totalpayments = sum(payment),
+            min_pay = min(payment),
+            max_pay = max(payment),
+            avg_pay = sum(payment)/NROW(patient_id)) %>% 
+  ungroup() %>% 
+  pivot_longer(min_pay:avg_pay, names_to='payment_type',values_to = 'payments')
+
+all_payments
+```
+
+```{r}
+pl_all<- ggplot(all_payments,aes(x=dos_month, y = payments, fill = payment_type)) +
+      geom_col(stat = "identity",position = 'dodge') +
+      geom_hline(yintercept = 6000, linetype = "dashed",color = "darkred") +
+      labs(x="Months", y = "Payments") +
+      ggtitle("minimum, maximum and average payments")
+
+pl_all + scale_y_continuous(breaks = seq(0,130000,5000))
 
 
+```
 
+ANALYSIS USING SUMMARY AND DETAIL DATA
+```{r}
+dci_data<-detail_raw_data
+
+names(dci_data)
+```
+```{r}
+dci_data<-dci_data %>% 
+select(-esco_id,-bene_hic_num,-full_encounter,-phys_neph,-phys_hosp,-phys_ed,-ambulance,-phys_other,-esco_aligned_flag,-inpatient_fluid,-outpatient_er_fluid,-part_a_other_fluid,-patient_id_1,-dos_yyyy,-dos_month,-esrd_date,-hgb_date,-tsat_date,-ferr_date,-albumin_date,-pth_date,-ca_date,
+       -cca_date,-ph_date,-k_date,-urr_date,-ktv_date)
 ```
 
