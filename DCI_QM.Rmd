@@ -15,6 +15,8 @@ library(tidyverse)
 library(ggplot2)
 library(plotly)
 library(data.table)
+library(lubridate)
+library(dplyr)
 ```
 
 ```{r}
@@ -228,13 +230,65 @@ ANALYSIS USING SUMMARY AND DETAIL DATA
 ```{r}
 dci_data<-detail_raw_data
 
+dci_data<-dci_data %>%
+select(-esco_id,-bene_hic_num,-full_encounter,-phys_neph,-phys_hosp,-phys_ed,-ambulance,-phys_other,-esco_aligned_flag,-inpatient_fluid,-outpatient_er_fluid,-part_a_other_fluid,-patient_id_1,-dos_yyyy,-dos_month,-esrd_date,-hgb_date,-tsat_date,-ferr_date,-albumin_date,-pth_date,-ca_date,-cca_date,-ph_date,-k_date,-urr_date,-ktv_date,-epo_given,-venofer_wasted,-inpatient_access,-outpatient_er_access,-part_a_other_access,-dci_claims,-non_dci_claims,-hha,-hospice,-dme,-start_date,-end_date,-epo_ceiling,-route_freq,-drug_name,-ferritin_cutoff,-tsat_cutoff,-hgb_cutoff,-ferrlecit_wasted,-zemplar_iv_wasted,-calcijex_iv_wasted,-feraheme_wasted,-hectorol_iv_wasted,-tx_missed)
 names(dci_data)
 ```
+ 
+
+ 
 ```{r}
-dci_data<-dci_data %>% 
-select(-esco_id,-bene_hic_num,-full_encounter,-phys_neph,-phys_hosp,-phys_ed,-ambulance,-phys_other,-esco_aligned_flag,-inpatient_fluid,-outpatient_er_fluid,-part_a_other_fluid,-patient_id_1,-dos_yyyy,-dos_month,-esrd_date,-hgb_date,-tsat_date,-ferr_date,-albumin_date,-pth_date,-ca_date,-cca_date,-ph_date,-k_date,-urr_date,-ktv_date,-epo_given,-venofer_wasted,-inpatient_access,-outpatient_er_access,-part_a_other_access,-dci_claims,-non_dci_claims,-hha,-hospice,-dme,-start_date,-end_date,-epo_ceiling,-route_freq,-drug_name,-ferritin_cutoff,-tsat_cutoff,-hgb_cutoff,-ferrlecit_wasted,-zemplar_iv_wasted,-calcijex_iv_wasted,-feraheme_wasted,-hectorol_iv_wasted,-tx_missed)
+#make sure all the columns are in correct data types.
+
+#change claims date columns to date datatype
+date_columns <- c("claim_first_dialysis_date","claim_last_dialysis_date")
+dci_data[date_columns] <- lapply(dci_data[date_columns],as.Date)
+
+#change the other columns to factor
+fac_columns <- c("patient_id","dos_year","location_id","dos_mm","modality","tx","tx_epo")
+dci_data[fac_columns] <- lapply(dci_data[fac_columns],as.factor)
+
+#change the below columns to logical
+bool_columns <- c("epo_protocol_flag","iron_protocol_flag","nutsup_protocol_flag")
+dci_data[bool_columns] <- lapply(dci_data[bool_columns],as.logical)
 ```
 
 ```{r}
-names(dci_data)
+#str(dci_data$venofer_given)
+
+
+dci_data<-dci_data %>% 
+  mutate_at(vars("ferrlecit_given","feraheme_given","venofer_given","zemplar_iv_given","hectorol_iv_given","calcijex_iv_given",
+                 "zemplar_or_given","hectorol_or_given","calcijex_iv_given","zemplar_or_given","hectorol_or_given","calcijex_or_given",
+                 "activase_given","prostat_given","nepro_given","liquacel_given","has_catheter",
+                 "aranesp_given","protinex_given","mircera_given","sensipar_given","parsabiv_given","protein_bar_given",
+                 "ice_cream_given","gelatein_given"),
+            funs(case_when(.=="NULL" ~ FALSE,
+                                 TRUE ~ TRUE)))
+
 ```
+```{r}
+str(dci_data$ferrlecit_given)
+
+```
+
+```{r}
+str(dci_data)
+ 
+```
+
+```{r}
+
+#change the below columns to numeric
+num_columns <- c("")
+num_columns <- lapply(dci_data[num_columns], as,numeric)
+```
+
+```{r}
+sum(is.na(dci_data$claim_first_dialysis_date))
+```
+```{r}
+str(dci_data)
+
+```
+
