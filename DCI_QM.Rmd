@@ -14,17 +14,27 @@ options(scipen = 999)
 library(tidyverse)
 library(ggplot2)
 library(plotly)
+library(data.table)
+library(lubridate)
+library(dplyr)
+library(corrplot)
 ```
 
 ```{r}
+#Get only the Summary data for some initial analysis
+
 summary_raw_data<-read_csv ('data/claim_summary_v1.csv' )
 summary_wds<-summary_raw_data
 ```
+```{r}
+#Get the data with all the required fields for analysis
+#claim_detail_raw_data<-fread("data/claim_details.csv",sep = "|",fill = T)
 
+detail_raw_data<-read_csv ('data/claim_details.csv' )
+```
+INITIAL ANALYSIS WITH THE SUMMARY DATA ONLY.
  
 ```{r}
-#claim_summary_raw<-read_csv('data/claim_summary.csv')
-#811454
 
 summary_wds %>% 
   select (-esco_id,-bene_hic_num,-esco_aligned_flag) %>% 
@@ -39,12 +49,15 @@ str(summary_wds)
 ```{r}
 summary(summary_wds)
 ```
+```{r}
+summary(summary_wds$payment)
+```
 
 ```{r}
 summary_wds %>% 
   ggplot(aes(x=payment)) +
   geom_histogram(breaks = seq(500,100000,by=1000),
-                 bins=10,
+                 bins=20,
                  col="red",
                  fill = "green",
                  alpha = 0.2) +
@@ -63,7 +76,24 @@ change_increase<-summary_wds %>%
   arrange (num_of_months,patient_id,dos_year,desc(sum_payment)) 
 
 
-change_increase
+change_increase$patient_id <- as.factor(change_increase$patient_id)
+```
+
+```{r}
+ change_increase %>% 
+  filter (patient_id == '403675')
+```
+
+```{r}
+change_increase$patient_id <- as.factor(change_increase$patient_id )
+change_increase$dos_year <- as.factor(change_increase$dos_year)
+
+pl <- ggplot( change_increase,aes(y=sum_payment, x = patient_id ,fill=dos_year)) +
+  geom_bar(stat = "identity",position = 'dodge') +
+  labs(x="patient_id", y= "Payments") +
+  ggtitle("yearly payments difference for patients")
+       
+pl
 
 ```
 
@@ -76,12 +106,11 @@ expensive_patients<-pivot_wider(change_increase,
                                 values_fill = list(sum_payment = 0)) %>% 
           mutate(percent_change = (`2018`-`2017`)/`2017` * 100) %>% 
           filter(percent_change > 50 & `2017` != 0) %>% 
-          arrange (desc(percent_change))  
-          
-   
-  
-       
+          arrange (desc(percent_change))
+
+expensive_patients
 ```
+
 
 ```{r}
 summary_wds %>% 
@@ -96,6 +125,7 @@ year_plot<- summary_wds %>%
   group_by(dos_year,dos_month) %>% 
   summarise(sum_pay = sum(payment)) %>% 
   ungroup()  
+year_plot
 
 year_plot$dos_month <- as.factor(year_plot$dos_month)
 year_plot$dos_year <- as.factor(year_plot$dos_year)
@@ -103,20 +133,36 @@ year_plot$dos_year <- as.factor(year_plot$dos_year)
 pl <- ggplot( year_plot,aes(y=sum_pay, x = dos_month ,fill=dos_year)) +
   geom_bar(stat = "identity",position = 'dodge') +
   labs(x="Months", y= "Payments") +
-  ggtitle("Total payments increase in each month in 2018")
+  ggtitle("payments increase every year")
        
 pl
 year_plot
   
 ```
 
+```{r}
+#redo this with non summarize raw data
+
+plbox <- ggplot(year_plot,aes(y=sum_pay, x = dos_month) )+
+  geom_boxplot() +
+  labs(x="Months", y= "Payments") +
+  ggtitle("T")
+       
+plbox
+ 
+```
+
+
 Add a new chunk by clicking the *Insert Chunk* button on the toolbar or by pressing *Cmd+Option+I*.
 
 When you save the notebook, an HTML file containing the code and output will be saved alongside it (click the *Preview* button or press *Cmd+Shift+K* to preview the HTML file). 
 
 The preview shows you a rendered HTML copy of the contents of the editor. Consequently, unlike *Knit*, *Preview* does not run any R code chunks. Instead, the output of the chunk when it was last run in the editor is displayed.
+
+
+
 ```{r}
-summary_wds %>% 
+summary_2017<-summary_wds %>% 
   group_by(dos_month,dos_year) %>% 
   summarise(
             total_patients = NROW(patient_id),
@@ -124,11 +170,428 @@ summary_wds %>%
             min_pay = min(payment),
             max_pay = max(payment),
             avg_pay = sum(payment)/NROW(patient_id)) %>% 
-  ungroup() %>% 
+  ungroup() %>%
   arrange(dos_year,dos_month) %>% 
+  filter(dos_year =="2017")
+
+summary_2017
+```
+
+```{r}
+summary_2017_pivot <- summary_2017 %>% 
+                      pivot_longer(min_pay:avg_pay, names_to = "payment_type", values_to = "payment")
+
+summary_2017_pivot$dos_month = as.factor(summary_2017_pivot$dos_month)
+
+summary_2017_pivot
+
+```
+
+```{r}
+ 
+pl<- ggplot(summary_2017_pivot,aes(x=dos_month, y = payment, fill = payment_type)) +
+      geom_col(stat = "identity",position = 'dodge') +
+      geom_hline(yintercept = 6000, linetype = "dashed",color = "darkred") +
+      labs(x="Months", y = "Payments") +
+      ggtitle("2017 minimum, maximum and average payments")
+
+pl + scale_y_continuous(breaks = seq(0,130000,5000))
+ 
+  
+```
+```{r}
+all_payments<-summary_wds %>% 
+  group_by(dos_month) %>% 
+  summarise(
+            total_patients = NROW(patient_id),
+            totalpayments = sum(payment),
+            min_pay = min(payment),
+            max_pay = max(payment),
+            avg_pay = sum(payment)/NROW(patient_id)) %>% 
+  ungroup() %>% 
+  pivot_longer(min_pay:avg_pay, names_to='payment_type',values_to = 'payments')
+
+all_payments
+```
+
+```{r}
+#redo  with box plot
+
+pl_all<- ggplot(all_payments,aes(x=dos_month, y = payments, fill = payment_type)) +
+      geom_col(stat = "identity",position = 'dodge') +
+      geom_hline(yintercept = 6000, linetype = "dashed",color = "darkred") +
+      labs(x="Months", y = "Payments") +
+      ggtitle("minimum, maximum and average payments")
+
+pl_all + scale_y_continuous(breaks = seq(0,130000,5000))
+
+
+```
+
+ANALYSIS USING SUMMARY AND DETAIL DATA
+```{r}
+dci_data<-detail_raw_data
+
+dci_data<-dci_data %>%
+select(-esco_id,-bene_hic_num,-full_encounter,-phys_neph,-phys_hosp,-phys_ed,-ambulance,-phys_other,-esco_aligned_flag,-inpatient_fluid,-outpatient_er_fluid,-part_a_other_fluid,-patient_id_1,-dos_yyyy,-dos_mm,-esrd_date,-hgb_date,-tsat_date,-ferr_date,-albumin_date,-pth_date,-ca_date,-cca_date,-ph_date,-k_date,-urr_date,-ktv_date,-epo_given,-venofer_wasted,-inpatient_access,-outpatient_er_access,-part_a_other_access,-dci_claims,-non_dci_claims,-hha,-hospice,-dme,-start_date,-end_date,-epo_ceiling,-route_freq,-drug_name,-ferritin_cutoff,-tsat_cutoff,-hgb_cutoff,-ferrlecit_wasted,-zemplar_iv_wasted,-calcijex_iv_wasted,-feraheme_wasted,-hectorol_iv_wasted,-tx_missed,-sensipar_dispensed)
+names(dci_data)
+```
+ 
+
+ 
+```{r}
+#make sure all the columns are in correct data types.
+
+#change claims date columns to date datatype
+date_columns <- c("claim_first_dialysis_date","claim_last_dialysis_date")
+dci_data[date_columns] <- lapply(dci_data[date_columns],as.Date)
+
+#change the other columns to factor
+fac_columns <- c("patient_id","dos_year","location_id","dos_month","modality","tx","tx_epo","sup_name")
+dci_data[fac_columns] <- lapply(dci_data[fac_columns],as.factor)
+
+#change the below columns to logical
+bool_columns <- c("epo_protocol_flag","iron_protocol_flag","nutsup_protocol_flag","hgb_exclude_flag","active_flag")
+dci_data[bool_columns] <- lapply(dci_data[bool_columns],as.logical)
+ 
+#Make below colums as logical true if they have any value else if they have null make it logical false.
+dci_data<-dci_data %>% 
+  mutate_at(vars("ferrlecit_given","feraheme_given","venofer_given","zemplar_iv_given","hectorol_iv_given","calcijex_iv_given","zemplar_or_given","hectorol_or_given","calcijex_iv_given","zemplar_or_given","hectorol_or_given","calcijex_or_given","activase_given","prostat_given","nepro_given","liquacel_given","has_catheter","aranesp_given","protinex_given","mircera_given","sensipar_given","parsabiv_given","protein_bar_given",
+                 "ice_cream_given","gelatein_given"),
+            funs(case_when(.=="NULL" ~ FALSE,
+                                 TRUE ~ TRUE)))
+
+#FIRST make the null VALUES in char col to zero's except for date columns
+
+num_columns <- c("hgb","tsat","ferr","albumin","pth","ca","cca","ph","k","urr","ktv","tx_epo")
+dci_data[num_columns]<-dci_data[num_columns]%>% 
+                            replace(.=="NULL","0") 
+
+#change all the character columns ot numeric
+dci_data<-dci_data %<>% mutate_if(is.character,as.numeric)
+ 
+#names(dci_data)
+ 
+#as for date columns we cannot replace na values ot 0. first make them character columns and then make rest to the na values to 0 in entire dataframe
+dci_data$claim_first_dialysis_date <-as.character.Date(dci_data$claim_first_dialysis_date )
+dci_data$claim_last_dialysis_date <-as.character.Date(dci_data$claim_last_dialysis_date )
+ 
+#make all na values to 0 in entire dataframe
+ dci_data[is.na(dci_data)]<-0
+# sum(is.na(dci_data))
+
+ #making the dates column back to date datatype
+dci_data$claim_first_dialysis_date <- as.Date(dci_data$claim_first_dialysis_date)
+dci_data$claim_last_dialysis_date <- as.Date(dci_data$claim_last_dialysis_date)
+
+#delete the outliers( payments which are less than 1500)
+dci_data<-dci_data %>% 
+  filter(`payment`>1500) %>% 
+  arrange(desc(payment))
+```
+
+```{r}
+
+dci_data
+
+```
+
+
+```{r}
+#sum(is.na(dci_data$claim_last_dialysis_date))
+sum(is.na(dci_data))
+```
+ 
+```{r}
+
+str(dci_data)
+
+```
+copy the cleaned dataset into another dataset just as a back up
+```{r}
+dci_data_ws<- dci_data
+```
+
+Histograms to understand the distribution of the data for payments
+```{r}
+dci_data_ws %>% 
+  select (payment,part_a,part_b_phys,part_b_phys) %>% 
+  ggplot(aes(x=payment ) )+
+  geom_histogram(color="#e9ecef", alpha=0.6, position = 'identity', bins=40) +
+  scale_x_log10()+
+scale_fill_manual(values=c("#69b3a2", "#404080")) +
+ labs(x="loggged payment values",
+      y="Counts",
+      title = "Payment distribution")
+```
+
+```{r}
+#make this interactive
+p<- ggplot(dci_data_ws,aes(x=payment,y=..density..)) +
+  geom_histogram(bins=40,binwidth = 0.05,fill = "grey",color="black") +
+  scale_x_log10()+
+geom_density(color = "red")+
+ labs(x="loggged payment values",
+      y="Frequency",
+      title = "Payment distribution")
+p
+
+
+
+```
+```{r}
+#make this interactive
+p<- ggplot(dci_data_ws,aes(x=payment,fill=modality)) +
+  geom_histogram(bins=10,binwidth = 0.25,alpha=0.8,position = "dodge") +
+  scale_x_log10()+
+ labs(x="loggged payment values",
+      y="Frequency",
+      title = "Payment distribution")
+p
+
+```
+
+```{r}
+#density distribution for modalities
+ggplot(dci_data_ws,aes(payment, color = modality,fill=modality)) +
+  scale_x_log10()+
+  geom_density(alpha = 0.8,position = "dodge")
+```
+```{r}
+dci_data_ws %>% 
+  select(payment,modality) %>% 
+  group_by(modality) %>% 
+  summarise(total_payments=sum(payment),num_of_rows=n())
+```
+```{r}
+#Function to create an histgram for each kind of madality HIC,HH AND PD
+make_plot <- function(mod){
+  dci_data_ws %>% 
+  select(payment,modality) %>% 
+  filter(modality == mod) %>% 
+   ggplot(aes(x=payment)) +
+  geom_histogram(binwith=1000) +
+  scale_x_log10() +
+  labs(x="payments",
+       y="frequency",
+       title = paste("Distribution of",mod))
+}
+make_plot('HH')
+make_plot('HIC')
+make_plot('PD')
+
+```
+
+```{r}
+dci_data_ws %>% 
+  select(payment,modality) %>% 
+  filter(modality == 'HH') %>% 
+   ggplot(aes(x=payment)) +
+  geom_histogram() +
+  labs(x="payments",
+       y="frequency",
+       title = "Distribution of Hemo Home Payments")
+ 
+```
+```{r}
+dci_data_ws %>% 
+select(payment,modality) %>% 
+#filter(payment>2800 & payment <3500) %>% 
+  group_by(modality) %>% 
   
 
 
+
+```
+```{r}
+dci_data_ws %>% 
+  select(payment,modality) %>% 
+  filter(payment>2800 & payment <3500) %>% 
+  group_by(payment,modality) %>% 
+  filter(modality=='PD') %>% 
+  ggplot(aes(x=payment)) +
+  geom_histogram(binwidth = 4000)
+```
+
+```{r}
+dci_data_ws %>% 
+  select(payment,modality) %>% 
+  filter(payment>2800 & payment <3500) 
+```
+
+
+```{r}
+library(reshape2)
+dci_long <- reshape2::melt(dci_data_ws)
+ggplot(dci_long, aes(value)) + facet_wrap(~variable, scales = 'free_x') +
+  geom_histogram()
+  
+
+```
+
+```{r}
+#frequency distribution with density lines
+#x<- sample(0:30, 200, replace=T, prob=15 - abs(15 - 0:30))
+x<-dci_data_ws$payment
+## Calculate and plot the two histograms
+hcum <- h <- hist(x, plot=FALSE)
+hcum$counts <- cumsum(hcum$counts)
+plot(hcum, main="")
+plot(h, add=T, col="grey")
+
+## Plot the density and cumulative density
+d <- density(x)
+lines(x = d$x, y = d$y * length(x) * diff(h$breaks)[1], lwd = 2)
+lines(x = d$x, y = cumsum(d$y)/max(cumsum(d$y)) * length(x), lwd = 2)
+```
+```{r}
+dci_payments_pivot<-dci_data_ws %>% 
+        select(payment,part_a,part_b_dme,part_b_phys) %>% 
+  pivot_longer(payment:part_b_phys,names_to="payment_type",values_to = "payment") 
+```
+
+
+
+```{r}
+dci_payments_pivot %>% 
+  ggplot( aes(x=payment,fill=payment_type,color=payment_type)) +
+  geom_histogram(bins= 40,binwidth = 0.05,alpha=0.3,position = "identity")+
+    scale_x_log10()+
+  geom_vline(aes(xintercept = mean(payment,na.rm=T)),
+             color = "red", linetype = "dashed",size = 1)+
+  labs(x="loggged payment values",
+      y="Frequency",
+      title = "distribution of payments across payment sources")
+```
+ 
+```{r}
+sum(is.na(dci_data$payment))
+```
+
+
+```{r}
+#fat tailed dis. 
+dci_payments_pivot %>% 
+  ggplot(aes(y = payment,x = payment_type,fill=payment_type)) +
+  geom_boxplot()+
+    scale_y_log10()
+ 
+```
+ 
+```{r}
+
+years_plot<- dci_data_ws %>% 
+  group_by(dos_year,dos_month) %>% 
+  summarise(sum_pay = sum(payment)) %>% 
+  ungroup()  
+
+pl <- ggplot( years_plot,aes(y=sum_pay, x = dos_month ,fill=dos_year)) +
+  geom_bar(stat = "identity",position = 'dodge') +
+  labs(x="Months", y= "Payments") +
+  ggtitle("Total payments increase in each month")
+       
+pl
+year_plot
+  
+```
+
+```{r}
+dci_data_ws %>% 
+  group_by(modality) %>% 
+  summarise(payments = sum(payment)) %>%  
+  ggplot(aes(x=modality,y=payments,fill = `payments`)) +
+  geom_bar(stat="identity" ) 
+ 
+
+```
+```{r}
+#show how modalities are doing by total payments 
+modality_pl<-dci_data_ws %>% 
+  group_by(dos_year,modality) %>% 
+  summarise(payments = sum(payment)) %>% 
+ungroup() %>% 
+  ggplot(aes(x=dos_year,y=payments,fill=modality,color=modality))+
+  geom_bar(stat="identity",position="dodge") +
+   geom_text(aes(label = round(payments),vjust=0),postion=position_dodge(width=5)) +
+labs(x="Modalities in 2017 and 2018",y="payments",title="Payments by modality")
+
+modality_pl
+```
+```{r}
+dci_data_ws  %>% 
+  ggplot(aes(x=dos_year,y=payment,color = modality)) +
+    geom_boxplot() +
+  scale_y_log10() +
+  labs(x = "Years",y="payments", 
+       title = "Payments in in 2017 and 2018")
+
+```
+correlational plot
+```{r}
+num_columns <- c("hgb","tsat","ferr","albumin","pth","ca","cca","ph","k","urr","ktv")
+corrs<-dci_data_ws %>% select(num_columns) %>% 
+ # drop_na_() %>% 
+  cor()
+corrs
+```
+
+```{r}
+
+
+library(corrplot)
+corrplot(corrs,type = "upper",order = "hclust",
+         tl.col="black",tl.srt=45)
+```
+
+```{r}
+num_columns <- c("payment","hgb","tsat","ferr","albumin","pth","ca","cca","ph","k","urr","ktv")
+corrs<-dci_data_ws %>% select(num_columns)  %>% 
+cor()
+
+
+corrplot(corrs,type = "upper",order = "hclust",
+         tl.col="black",tl.srt=45)
+  
+ 
+```
+```{r}
+ 
+```
+
+```{r}
+tibble('variable' = corrs[1,2:12] %>% names(),'correlation' = corrs[1,2:12]) %>% 
+  ggplot(aes(x=reorder(variable,correlation),y = correlation)) +
+  geom_point()+
+  geom_segment(aes(xend=variable,yend=0))+
+  coord_flip() +
+  geom_hline(yintercept = 0)
+```
+
+
+```{r}
+ggplot(dci_data_ws, aes(x=albumin,y=payment) ) +
+  geom_point(alpha=0.2) + geom_smooth(method = 'lm') +
+  scale_x_log10() +
+  scale_y_log10()
+
+```
+```{r}
+#unique(dci_data_ws$ktv)
+#hgb vs payment
+
+ggplot(dci_data_ws, aes(x=hgb,y=payment) ) +
+  geom_point() + geom_smooth(method = 'lm') +
+  scale_x_log10() +
+  labs(x="hgb", y = "payment", title = "Payment Vs hgb")
+
+
+```
+```{r}
+
+ggplot(dci_data_ws, aes(x=ca,y=payment) ) +
+  geom_point() + geom_smooth(method = 'lm') +
+  scale_x_log10() +
+  labs(x="ca", y = "payment", title = "Payment Vs ca")
 
 ```
 
