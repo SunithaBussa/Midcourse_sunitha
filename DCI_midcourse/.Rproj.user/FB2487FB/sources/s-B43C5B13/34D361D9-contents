@@ -1,0 +1,512 @@
+make_scatter_plot('albumin')
+#Function to create an scatter plots for each kind of features showing correlation between payments.
+make_scatter_plot <- function(fea){
+ggplot(dci_data_ws, aes(x=fea,y=payment) ) +
+geom_point(alpha=0.11) + geom_smooth(method = 'lm') +
+scale_x_log10() +
+#scale_y_log10() +
+labs(x=fea, y="Payment",title = paste("Correlation between Payment and ",fea))
+}
+make_scatter_plot('albumin')
+#Function to create an scatter plots for each kind of features showing correlation between payments.
+make_scatter_plot <- function(fea){
+ggplot(dci_data_ws, aes(x=fea,y=payment) ) +
+geom_point(alpha=0.11) + geom_smooth(method = 'lm') +
+labs(x=fea, y="Payment",title = paste("Correlation between Payment and ",fea))
+}
+make_scatter_plot('albumin')
+#make_scatter_plot('HIC')
+#make_scatter_plot('PD')
+#Function to create an scatter plots for each kind of features showing correlation between payments.
+make_scatter_plot <- function(fea){
+ggplot(dci_data_ws, aes(x=fea,y=payment) ) +
+geom_point(alpha=0.11) + geom_smooth(method = 'lm') +
+labs(x=fea, y="Payment",title = paste("Correlation between Payment and ",fea))
+}
+make_scatter_plot('albumin')
+make_scatter_plot('k')
+#make_scatter_plot('HIC')
+#make_scatter_plot('PD')
+ggplot(dci_data_ws, aes(x=albumin,y=payment) ) +
+geom_point(alpha=0.11) + geom_smooth(method = 'lm') +
+labs(x=fea, y="Payment",title = paste("Correlation between Payment and ",albumin))
+ggplot(dci_data_ws, aes(x=albumin,y=payment) ) +
+geom_point(alpha=0.11) + geom_smooth(method = 'lm') +
+labs(x=fea, y="Payment",title = paste("Correlation between Payment and "))
+ggplot(dci_data_ws, aes(x=albumin,y=payment) ) +
+geom_point(alpha=0.11) + geom_smooth(method = 'lm') +
+labs(x="fea"albumin"", y="Payment",title = paste("Correlation between Payment and "))
+ggplot(dci_data_ws, aes(x=albumin,y=payment) ) +
+geom_point(alpha=0.11) + geom_smooth(method = 'lm') +
+labs(x="albumin", y="Payment",title = paste("Correlation between Payment and "))
+my_fun<-function(var){
+ggplot(dci_data_ws, aes(x=var,y=payment) ) +
+geom_point(alpha=0.11) + geom_smooth(method = 'lm') +
+labs(x=var, y="Payment",title = paste("Correlation between Payment and "))
+}
+my_fun<-function(var){
+ggplot(dci_data_ws, aes(x=var,y=payment) ) +
+geom_point(alpha=0.11) + geom_smooth(method = 'lm') +
+labs(x=var, y="Payment",title = paste("Correlation between Payment and "))
+}
+my_fun('k')
+my_fun<-function(var){
+ggplot(dci_data_ws, aes(x=var,y=payment) ) +
+geom_point(alpha=0.11) + geom_smooth(method = 'lm') +
+labs(x=var, y="Payment",title = paste("Correlation between Payment and "))
+}
+my_fun('albumin')
+my_fun<-function(var){
+ggplot(dci_data_ws, aes(x=var,y=payment) ) +
+geom_point(alpha=0.11) + geom_smooth(method = 'lm') +
+labs(x=var, y="Payment",title = paste("Correlation between Payment and "))
+}
+my_fun("albumin")
+locations<-reac_csv('data/ESCO_LOCATIONS_lo.csv)
+locations<-reac_csv('data/ESCO_LOCATIONS_lo.csv')
+locations<-read_csv('data/ESCO_LOCATIONS_lo.csv')
+View(locations)
+View(locations)
+library(ggmap)
+install.packages('ggmap')
+library(ggmap)
+get_map(location =c(lon = -95.3632715, lat=29.7632836),
+zoom="auto",sclae ="auto",
+maptype = c("terrain","satellite"))
+library(ggmap)
+get_map(location =c(lon = -95.3632715, lat=29.7632836),
+zoom="auto",sclae ="auto",
+maptype = c("terrain"))
+?ggmap
+install.packages("tmap")
+install.packages('tmaptools')
+install.packages('sf')
+install.packages('leaflet')
+library("tmap")
+library("tmaptools")
+library("sf")
+library("leaflet")
+install.packages("rworldmap")
+library("rworldmap")
+newmap <-  getMap(resolution = "medium")
+plot(newmap,xlim=c(-20,59),ylim=c(3.5,71),asp=1)
+shiny::runApp('NSS/GitRepo/Midcourse_sunitha/DCI_midcourse')
+runApp('NSS/GitRepo/Midcourse_sunitha/DCI_midcourse')
+runApp('NSS/GitRepo/Midcourse_sunitha/DCI_midcourse')
+runApp('NSS/GitRepo/Midcourse_sunitha/DCI_midcourse')
+runApp('NSS/GitRepo/Midcourse_sunitha/DCI_midcourse')
+setwd("~/NSS/GitRepo/Midcourse_sunitha")
+shiny::runApp('DCI_midcourse')
+View(dci_data_shiny)
+ggplot(dci_data_shiny,aes(x=payment,y=..density..)) +
+geom_histogram(bins=40,binwidth = 0.05,fill = "black",color="black",alpha=0.2) +
+scale_x_log10()+
+geom_density(color = "red")+
+labs(x="Logged payments",
+y="Frequency",
+title = "Total Payments distribution")
+runApp('DCI_midcourse')
+runApp('DCI_midcourse')
+runApp('DCI_midcourse')
+runApp('DCI_midcourse')
+runApp('DCI_midcourse')
+runApp('DCI_midcourse')
+runApp('DCI_midcourse')
+runApp('DCI_midcourse')
+runApp('DCI_midcourse')
+runApp('DCI_midcourse')
+runApp('DCI_midcourse')
+runApp('DCI_midcourse')
+runApp('DCI_midcourse')
+runApp('DCI_midcourse')
+runApp('DCI_midcourse')
+runApp('DCI_midcourse')
+options(scipen = 999)
+library(tidyverse)
+library(ggplot2)
+library(plotly)
+library(data.table)
+library(lubridate)
+library(dplyr)
+library(corrplot)
+library(leaflet)
+#Get only the Summary data for some initial analysis
+summary_raw_data<-read_csv ('data/claim_summary_v1.csv' )
+summary_wds<-summary_raw_data
+#Get the data with all the required fields for analysis
+#claim_detail_raw_data<-fread("data/claim_details.csv",sep = "|",fill = T)
+#detail_raw_data<-read_csv ('data/claim_details.csv' )
+locations<-read_csv('data/ESCO_LOCATIONS_lo.csv' )
+summary_wds %>%
+select (-esco_id,-bene_hic_num,-esco_aligned_flag) %>%
+filter(patient_id == '811454') %>%
+arrange(dos_year,dos_month)
+str(summary_wds)
+summary(summary_wds)
+summary(summary_wds$payment)
+summary_wds %>%
+ggplot(aes(x=payment)) +
+geom_histogram(breaks = seq(500,100000,by=1000),
+bins=20,
+col="red",
+fill = "green",
+alpha = 0.2) +
+scale_x_log10()  +
+labs(x="Payments", y = "Counts",title = "Payments Histogram")
+change_increase<-summary_wds %>%
+select (patient_id,payment,dos_year,dos_month) %>%
+group_by(patient_id,dos_year) %>%
+summarise(sum_payment = sum(payment), num_of_months = NROW(dos_month)) %>%
+ungroup %>%
+filter(num_of_months >11) %>%
+arrange (num_of_months,patient_id,dos_year,desc(sum_payment))
+change_increase$patient_id <- as.factor(change_increase$patient_id)
+change_increase %>%
+filter (patient_id == '403675')
+change_increase$patient_id <- as.factor(change_increase$patient_id )
+change_increase$dos_year <- as.factor(change_increase$dos_year)
+pl <- ggplot( change_increase,aes(y=sum_payment, x = patient_id ,fill=dos_year)) +
+geom_bar(stat = "identity",position = 'dodge') +
+labs(x="patient_id", y= "Payments") +
+ggtitle("yearly payments difference for patients")
+pl
+#pivot the data and understand hte percentage change in payments and get expensive patients
+expensive_patients<-pivot_wider(change_increase,
+names_from = dos_year,
+values_from = sum_payment,
+values_fill = list(sum_payment = 0)) %>%
+mutate(percent_change = (`2018`-`2017`)/`2017` * 100) %>%
+filter(percent_change > 50 & `2017` != 0) %>%
+arrange (desc(percent_change))
+expensive_patients
+summary_wds %>%
+filter(patient_id =='798094') %>%
+arrange (dos_year,dos_month)
+year_plot<- summary_wds %>%
+group_by(dos_year,dos_month) %>%
+summarise(sum_pay = sum(payment)) %>%
+ungroup()
+year_plot
+year_plot$dos_month <- as.factor(year_plot$dos_month)
+year_plot$dos_year <- as.factor(year_plot$dos_year)
+pl <- ggplot( year_plot,aes(y=sum_pay, x = dos_month ,fill=dos_year)) +
+geom_bar(stat = "identity",position = 'dodge') +
+labs(x="Months", y= "Payments") +
+ggtitle("payments increase every year")
+pl
+year_plot
+#redo this with non summarize raw data
+plbox <- ggplot(year_plot,aes(y=sum_pay, x = dos_month) )+
+geom_boxplot() +
+labs(x="Months", y= "Payments") +
+ggtitle("T")
+plbox
+summary_2017<-summary_wds %>%
+group_by(dos_month,dos_year) %>%
+summarise(
+total_patients = NROW(patient_id),
+totalpayments = sum(payment),
+min_pay = min(payment),
+max_pay = max(payment),
+avg_pay = sum(payment)/NROW(patient_id)) %>%
+ungroup() %>%
+arrange(dos_year,dos_month) %>%
+filter(dos_year =="2017")
+summary_2017
+summary_2017_pivot <- summary_2017 %>%
+pivot_longer(min_pay:avg_pay, names_to = "payment_type", values_to = "payment")
+summary_2017_pivot$dos_month = as.factor(summary_2017_pivot$dos_month)
+summary_2017_pivot
+pl<- ggplot(summary_2017_pivot,aes(x=dos_month, y = payment, fill = payment_type)) +
+geom_col(stat = "identity",position = 'dodge') +
+geom_hline(yintercept = 6000, linetype = "dashed",color = "darkred") +
+labs(x="Months", y = "Payments") +
+ggtitle("2017 minimum, maximum and average payments")
+pl + scale_y_continuous(breaks = seq(0,130000,5000))
+all_payments<-summary_wds %>%
+group_by(dos_month) %>%
+summarise(
+total_patients = NROW(patient_id),
+totalpayments = sum(payment),
+min_pay = min(payment),
+max_pay = max(payment),
+avg_pay = sum(payment)/NROW(patient_id)) %>%
+ungroup() %>%
+pivot_longer(min_pay:avg_pay, names_to='payment_type',values_to = 'payments')
+all_payments
+#redo  with box plot
+pl_all<- ggplot(all_payments,aes(x=dos_month, y = payments, fill = payment_type)) +
+geom_col(stat = "identity",position = 'dodge') +
+geom_hline(yintercept = 6000, linetype = "dashed",color = "darkred") +
+labs(x="Months", y = "Payments") +
+ggtitle("minimum, maximum and average payments")
+pl_all + scale_y_continuous(breaks = seq(0,130000,5000))
+#get detail and summary data and save it in a df
+detail_raw_data<-read_csv ('data/claim_details.csv' )
+dci_data<-detail_raw_data
+dci_data<-dci_data %>%
+select(-esco_id,-bene_hic_num,-full_encounter,-phys_neph,-phys_hosp,-phys_ed,-ambulance,-phys_other,-esco_aligned_flag,-inpatient_fluid,-outpatient_er_fluid,-part_a_other_fluid,-patient_id_1,-dos_yyyy,-dos_mm,-esrd_date,-hgb_date,-tsat_date,-ferr_date,-albumin_date,-pth_date,-ca_date,-cca_date,-ph_date,-k_date,-urr_date,-ktv_date,-epo_given,-venofer_wasted,-inpatient_access,-outpatient_er_access,-part_a_other_access,-dci_claims,-non_dci_claims,-hha,-hospice,-dme,-start_date,-end_date,-epo_ceiling,-route_freq,-drug_name,-ferritin_cutoff,-tsat_cutoff,-hgb_cutoff,-ferrlecit_wasted,-zemplar_iv_wasted,-calcijex_iv_wasted,-feraheme_wasted,-hectorol_iv_wasted,-tx_missed,-sensipar_dispensed)
+#make sure all the columns are in correct data types.
+#change claims date columns to date datatype
+date_columns <- c("claim_first_dialysis_date","claim_last_dialysis_date")
+dci_data[date_columns] <- lapply(dci_data[date_columns],as.Date)
+#change the other columns to factor
+fac_columns <- c("patient_id","dos_year","location_id","dos_month","modality","tx","tx_epo","sup_name")
+dci_data[fac_columns] <- lapply(dci_data[fac_columns],as.factor)
+#change the below columns to logical
+bool_columns <- c("epo_protocol_flag","iron_protocol_flag","nutsup_protocol_flag","hgb_exclude_flag","active_flag")
+dci_data[bool_columns] <- lapply(dci_data[bool_columns],as.logical)
+#Make below colums as logical true if they have any value else if they have null make it logical false.
+dci_data<-dci_data %>%
+mutate_at(vars("ferrlecit_given","feraheme_given","venofer_given","zemplar_iv_given","hectorol_iv_given","calcijex_iv_given","zemplar_or_given","hectorol_or_given","calcijex_iv_given","zemplar_or_given","hectorol_or_given","calcijex_or_given","activase_given","prostat_given","nepro_given","liquacel_given","has_catheter","aranesp_given","protinex_given","mircera_given","sensipar_given","parsabiv_given","protein_bar_given",
+"ice_cream_given","gelatein_given"),
+funs(case_when(.=="NULL" ~ FALSE,
+TRUE ~ TRUE)))
+#FIRST make the null VALUES in char col to zero's except for date columns
+num_columns <- c("hgb","tsat","ferr","albumin","pth","ca","cca","ph","k","urr","ktv","tx_epo")
+dci_data[num_columns]<-dci_data[num_columns]%>%
+replace(.=="NULL","0")
+#change all the character columns ot numeric
+dci_data<-dci_data %>% mutate_if(is.character,as.numeric)
+#names(dci_data)
+#as for date columns we cannot replace na values ot 0. first make them character columns and then make rest to the na values to 0 in entire dataframe
+dci_data$claim_first_dialysis_date <-as.character.Date(dci_data$claim_first_dialysis_date )
+dci_data$claim_last_dialysis_date <-as.character.Date(dci_data$claim_last_dialysis_date )
+#make all na values to 0 in entire dataframe
+dci_data[is.na(dci_data)]<-0
+# sum(is.na(dci_data))
+#making the dates column back to date datatype
+dci_data$claim_first_dialysis_date <- as.Date(dci_data$claim_first_dialysis_date)
+dci_data$claim_last_dialysis_date <- as.Date(dci_data$claim_last_dialysis_date)
+#delete the outliers( payments which are less than 1500)
+dci_data<-dci_data %>%
+filter(`payment`>1500) %>%
+arrange(desc(payment))
+#combine 2 separate part_b payments to one
+dci_data<-dci_data %>%
+mutate(part_b = part_b_phys + part_b_dme)
+dci_data %>%
+select(payment,part_a,part_b_phys,part_b_dme,part_b)
+#sum(is.na(dci_data$claim_last_dialysis_date))
+sum(is.na(dci_data))
+str(dci_data)
+dci_data_ws<- dci_data
+saveRDS(dci_data_ws,file="dci_data.rds")
+dci_data_ws %>%
+select (payment,part_a,part_b_phys,part_b_phys) %>%
+ggplot(aes(x=payment) )+
+geom_histogram(color="#e9ecef", alpha=0.6, position = 'identity', bins=40) +
+scale_x_log10()+
+scale_fill_manual(values=c("#69b3a2", "#404080")) +
+labs(x="loggged payment values",
+y="Counts",
+title = "Payment distribution")
+#make this interactive
+p<- ggplot(dci_data_ws,aes(x=payment,y=..density..)) +
+geom_histogram(bins=40,binwidth = 0.05,fill = "black",color="black",alpha=0.2) +
+scale_x_log10()+
+geom_density(color = "red")+
+labs(x="Logged payments",
+y="Frequency",
+title = "Total Payments distribution")
+ggplotly(p)
+#make this interactive
+p<- ggplot(dci_data_ws,aes(x=payment,fill=modality)) +
+geom_histogram(bins=10,binwidth = 0.25,alpha=0.8,position = "dodge") +
+scale_x_log10()+
+labs(x="loggged payment values",
+y="Frequency",
+title = "Payment distribution")
+p
+#density distribution for modalities
+ggplot(dci_data_ws,aes(payment, color = modality,fill=modality)) +
+scale_x_log10()+
+geom_density(alpha = 0.8,position = "dodge")
+dci_data_ws %>%
+select(payment,modality) %>%
+group_by(modality) %>%
+summarise(total_payments=sum(payment),num_of_rows=n())
+#Function to create an histgram for each kind of madality HIC,HH AND PD
+make_plot <- function(mod){
+dci_data_ws %>%
+select(payment,modality) %>%
+filter(modality == mod) %>%
+ggplot(aes(x=payment)) +
+geom_histogram(binwith=1000) +
+scale_x_log10() +
+labs(x="payments",
+y="frequency",
+title = paste("Distribution of",mod))
+}
+make_plot('HH')
+make_plot('HIC')
+make_plot('PD')
+dci_data_ws %>%
+select(payment,modality) %>%
+filter(modality == 'HH') %>%
+ggplot(aes(x=payment)) +
+geom_histogram() +
+labs(x="payments",
+y="frequency",
+title = "Distribution of Hemo Home Payments")
+dci_data_ws %>%
+select(payment,modality) %>%
+#filter(payment>2800 & payment <3500) %>%
+group_by(modality) %>%
+#plot the
+pl<-payment_type_dist %>%
+filter(dos_year==2018 & dos_month==2) %>%
+ggplot( aes(x=payment,fill=payment_type,color= payment_type)) +
+geom_histogram(bins= 40,binwidth = 0.05,alpha=0.3,position = "identity") +
+scale_x_log10() +
+geom_vline(aes(xintercept = mean(payment,na.rm=T)),color = "red", linetype = "dashed",size = 1) +
+labs(x="Logged payments",y="Frequency",title = "distribution of payments across payment sources") +
+ggplotly(pl)
+dci_data_ws %>%
+select(payment,modality) %>%
+filter(payment>2800 & payment <3500) %>%
+group_by(payment,modality) %>%
+filter(modality=='PD') %>%
+ggplot(aes(x=payment)) +
+geom_histogram(binwidth = 4000)
+#distribution by payment type
+payment_type_dist<-dci_data_ws %>%
+select(dos_year,dos_month,payment,part_a,part_b_dme,part_b_phys,part_b)%>%
+pivot_longer(payment:part_b,names_to="payment_type",values_to = "payment")
+payment_type_dist
+#plot the
+pl<-payment_type_dist %>%
+filter(dos_year==2018 & dos_month==2) %>%
+ggplot( aes(x=payment,fill=payment_type,color= payment_type)) +
+geom_histogram(bins= 40,binwidth = 0.05,alpha=0.3,position = "identity") +
+scale_x_log10() +
+geom_vline(aes(xintercept = mean(payment,na.rm=T)),color = "red", linetype = "dashed",size = 1) +
+labs(x="Logged payments",y="Frequency",title = "distribution of payments across payment sources") +
+ggplotly(pl)
+#plot the
+pl<-payment_type_dist %>%
+filter(dos_year==2018 & dos_month==2) %>%
+ggplot( aes(x=payment,fill=payment_type,color= payment_type)) +
+geom_histogram(bins= 40,binwidth = 0.05,alpha=0.3,position = "identity") +
+scale_x_log10() +
+geom_vline(aes(xintercept = mean(payment,na.rm=T)),color = "red", linetype = "dashed",size = 1) +
+labs(x="Logged payments",y="Frequency",title = "distribution of payments across payment sources") +
+pl
+#plot the
+payment_type_dist %>%
+filter(dos_year==2018 & dos_month==2) %>%
+ggplot( aes(x=payment,fill=payment_type,color= payment_type)) +
+geom_histogram(bins= 40,binwidth = 0.05,alpha=0.3,position = "identity") +
+scale_x_log10() +
+geom_vline(aes(xintercept = mean(payment,na.rm=T)),color = "red", linetype = "dashed",size = 1) +
+labs(x="Logged payments",y="Frequency",title = "distribution of payments across payment sources") +
+#ggplotly(pl)
+#plot the
+payment_type_dist %>%
+#filter(dos_year==2018 & dos_month==2) %>%
+ggplot( aes(x=payment,fill=payment_type,color= payment_type)) +
+geom_histogram(bins= 40,binwidth = 0.05,alpha=0.3,position = "identity") +
+scale_x_log10() +
+geom_vline(aes(xintercept = mean(payment,na.rm=T)),color = "red", linetype = "dashed",size = 1) +
+labs(x="Logged payments",y="Frequency",title = "distribution of payments across payment sources") +
+#ggplotly(pl)
+#fat tailed dis.
+payment_type_dist %>%
+ggplot(aes(y = payment,x = payment_type,fill=payment_type)) +
+geom_boxplot()+
+scale_y_log10()
+#distribution by payment type
+payment_type_dist<-dci_data_ws %>%
+select(dos_year,dos_month,payment,part_a,part_b_dme,part_b_phys,part_b)%>%
+pivot_longer(payment:part_b,names_to="payment_type",values_to = "payment")
+payment_type_dist
+#plot the
+payment_type_dist %>%
+#filter(dos_year==2018 & dos_month==2) %>%
+ggplot( aes(x=payment,fill=payment_type,color= payment_type)) +
+geom_histogram(bins= 40,binwidth = 0.05,alpha=0.3,position = "identity") +
+scale_x_log10() +
+geom_vline(aes(xintercept = mean(payment,na.rm=T)),color = "red", linetype = "dashed",size = 1) +
+labs(x="Logged payments",y="Frequency",title = "distribution of payments across payment sources")
+#ggplotly(pl)
+#plot the
+payment_type_dist %>%
+filter(dos_year==2018 & dos_month==2) %>%
+ggplot( aes(x=payment,fill=payment_type,color= payment_type)) +
+geom_histogram(bins= 40,binwidth = 0.05,alpha=0.3,position = "identity") +
+scale_x_log10() +
+geom_vline(aes(xintercept = mean(payment,na.rm=T)),color = "red", linetype = "dashed",size = 1) +
+labs(x="Logged payments",y="Frequency",title = "distribution of payments across payment sources")
+#ggplotly(pl)
+#plot the fequency distribution across different payment types
+payment_type_dist %>%
+filter(dos_year==2018 & dos_month==2) %>%
+ggplot( aes(x=payment,fill=payment_type,color= payment_type)) +
+geom_histogram(bins= 40,binwidth = 0.05,alpha=0.3,position = "identity") +
+scale_x_log10() +
+geom_vline(aes(xintercept = mean(payment,na.rm=T)),color = "red", linetype = "dashed",size = 1) +
+labs(x="Logged payments",y="Frequency",title = "distribution of payments across payment sources")
+ggplotly(pl)
+#plot the fequency distribution across different payment types
+pl<-payment_type_dist %>%
+filter(dos_year==2018 & dos_month==2) %>%
+ggplot( aes(x=payment,fill=payment_type,color= payment_type)) +
+geom_histogram(bins= 40,binwidth = 0.05,alpha=0.3,position = "identity") +
+scale_x_log10() +
+geom_vline(aes(xintercept = mean(payment,na.rm=T)),color = "red", linetype = "dashed",size = 1) +
+labs(x="Logged payments",y="Frequency",title = "distribution of payments across payment sources")
+ggplotly(pl)
+#plot the fequency distribution across different payment types
+pl<-payment_type_dist %>%
+filter(dos_year==2017 & dos_month==2) %>%
+ggplot( aes(x=payment,fill=payment_type,color= payment_type)) +
+geom_histogram(bins= 40,binwidth = 0.05,alpha=0.3,position = "identity") +
+scale_x_log10() +
+geom_vline(aes(xintercept = mean(payment,na.rm=T)),color = "red", linetype = "dashed",size = 1) +
+labs(x="Logged payments",y="Frequency",title = "distribution of payments across payment sources")
+ggplotly(pl)
+#plot the fequency distribution across different payment types
+pl<-payment_type_dist %>%
+filter(dos_year==2017 & dos_month==1) %>%
+ggplot( aes(x=payment,fill=payment_type,color= payment_type)) +
+geom_histogram(bins= 40,binwidth = 0.05,alpha=0.3,position = "identity") +
+scale_x_log10() +
+geom_vline(aes(xintercept = mean(payment,na.rm=T)),color = "red", linetype = "dashed",size = 1) +
+labs(x="Logged payments",y="Frequency",title = "distribution of payments across payment sources")
+ggplotly(pl)
+#plot the fequency distribution across different payment types
+pl<-dci_data_ws %>%
+select(dos_year,dos_month,location_id,payment,part_a,part_b_dme,part_b_phys,part_b)%>%
+pivot_longer(payment:part_b,names_to="payment_type",values_to = "payment") %>%
+filter(dos_year==2017 & dos_month==1) %>%
+ggplot( aes(x=payment,fill=payment_type,color= payment_type)) +
+geom_histogram(bins= 40,binwidth = 0.05,alpha=0.3,position = "identity") +
+scale_x_log10() +
+geom_vline(aes(xintercept = mean(payment,na.rm=T)),color = "red", linetype = "dashed",size = 1) +
+labs(x="Logged payments",y="Frequency",title = "distribution of payments across payment sources")
+ggplotly(pl)
+runApp('DCI_midcourse')
+View(dci_data_shiny)
+View(dci_data_shiny)
+View(dci_data_shiny)
+View(dci_data_shiny)
+runApp('DCI_midcourse')
+total_payments_shiny <- dci_data_shiny %>%
+select(dos_year,payment) %>%
+summarise(sum(payment))
+View(total_payments_shiny)
+View(total_payments_shiny)
+runApp('DCI_midcourse')
+runApp('DCI_midcourse')
+runApp('DCI_midcourse')
+runApp('DCI_midcourse')
+runApp('DCI_midcourse')
+runApp('DCI_midcourse')
+runApp('DCI_midcourse')
+runApp('DCI_midcourse')
+runApp('DCI_midcourse')
+runApp('DCI_midcourse')
+runApp('DCI_midcourse')
+names(dci_data_shiny)
+column_to_rownames(dci_data_shiny,var="features")
+runApp('DCI_midcourse')

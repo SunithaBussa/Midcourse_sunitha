@@ -1,0 +1,6 @@
+"0","summary_2017_pivot <- summary_2017 %>% "
+"0","                      pivot_longer(min_pay:avg_pay, names_to = ""payment_type"", values_to = ""payment"")"
+"0",""
+"0","summary_2017_pivot$dos_month = as.factor(summary_2017_pivot$dos_month)"
+"0",""
+"0","summary_2017_pivot"

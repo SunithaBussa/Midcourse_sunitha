@@ -1,0 +1,5 @@
+"0","dci_data_ws %>% "
+"0","  group_by(modality) %>% "
+"0","  summarise(payments = sum(payment)) %>%  "
+"0","  ggplot(aes(x=modality,y=payments,fill = `payments`)) +"
+"0","  geom_bar(stat=""identity"" ) "

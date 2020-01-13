@@ -1,0 +1,14 @@
+"0","locations<-read_csv('data/ESCO_LOCATIONS_lo.csv' )"
+"2","Parsed with column specification:
+cols(
+  location_id = [31mcol_character()[39m,
+  short_name = [31mcol_character()[39m,
+  location_address_1 = [31mcol_character()[39m,
+  location_address_2 = [31mcol_character()[39m,
+  location_city = [31mcol_character()[39m,
+  location_state = [31mcol_character()[39m,
+  location_zip_code = [32mcol_double()[39m,
+  latitude = [32mcol_double()[39m,
+  longitude = [32mcol_double()[39m
+)
+"

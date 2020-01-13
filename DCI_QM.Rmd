@@ -18,6 +18,7 @@ library(data.table)
 library(lubridate)
 library(dplyr)
 library(corrplot)
+library(leaflet)
 ```
 
 ```{r}
@@ -30,7 +31,10 @@ summary_wds<-summary_raw_data
 #Get the data with all the required fields for analysis
 #claim_detail_raw_data<-fread("data/claim_details.csv",sep = "|",fill = T)
 
-detail_raw_data<-read_csv ('data/claim_details.csv' )
+#detail_raw_data<-read_csv ('data/claim_details.csv' )
+```
+```{r}
+locations<-read_csv('data/ESCO_LOCATIONS_lo.csv' )
 ```
 INITIAL ANALYSIS WITH THE SUMMARY DATA ONLY.
  
@@ -229,17 +233,16 @@ pl_all + scale_y_continuous(breaks = seq(0,130000,5000))
 ```
 
 ANALYSIS USING SUMMARY AND DETAIL DATA
+Get the data and clean it 
 ```{r}
+#get detail and summary data and save it in a df
+detail_raw_data<-read_csv ('data/claim_details.csv' )
+
 dci_data<-detail_raw_data
 
 dci_data<-dci_data %>%
 select(-esco_id,-bene_hic_num,-full_encounter,-phys_neph,-phys_hosp,-phys_ed,-ambulance,-phys_other,-esco_aligned_flag,-inpatient_fluid,-outpatient_er_fluid,-part_a_other_fluid,-patient_id_1,-dos_yyyy,-dos_mm,-esrd_date,-hgb_date,-tsat_date,-ferr_date,-albumin_date,-pth_date,-ca_date,-cca_date,-ph_date,-k_date,-urr_date,-ktv_date,-epo_given,-venofer_wasted,-inpatient_access,-outpatient_er_access,-part_a_other_access,-dci_claims,-non_dci_claims,-hha,-hospice,-dme,-start_date,-end_date,-epo_ceiling,-route_freq,-drug_name,-ferritin_cutoff,-tsat_cutoff,-hgb_cutoff,-ferrlecit_wasted,-zemplar_iv_wasted,-calcijex_iv_wasted,-feraheme_wasted,-hectorol_iv_wasted,-tx_missed,-sensipar_dispensed)
-names(dci_data)
-```
- 
 
- 
-```{r}
 #make sure all the columns are in correct data types.
 
 #change claims date columns to date datatype
@@ -268,7 +271,7 @@ dci_data[num_columns]<-dci_data[num_columns]%>%
                             replace(.=="NULL","0") 
 
 #change all the character columns ot numeric
-dci_data<-dci_data %<>% mutate_if(is.character,as.numeric)
+dci_data<-dci_data %>% mutate_if(is.character,as.numeric)
  
 #names(dci_data)
  
@@ -288,12 +291,17 @@ dci_data$claim_last_dialysis_date <- as.Date(dci_data$claim_last_dialysis_date)
 dci_data<-dci_data %>% 
   filter(`payment`>1500) %>% 
   arrange(desc(payment))
+
+#combine 2 separate part_b payments to one
+dci_data<-dci_data %>% 
+  mutate(part_b = part_b_phys + part_b_dme)
+
 ```
 
+ 
 ```{r}
-
-dci_data
-
+dci_data %>% 
+  select(payment,part_a,part_b_phys,part_b_dme,part_b)
 ```
 
 
@@ -303,20 +311,19 @@ sum(is.na(dci_data))
 ```
  
 ```{r}
-
 str(dci_data)
-
 ```
 copy the cleaned dataset into another dataset just as a back up
 ```{r}
 dci_data_ws<- dci_data
+saveRDS(dci_data_ws,file="dci_data.rds")
 ```
 
 Histograms to understand the distribution of the data for payments
 ```{r}
 dci_data_ws %>% 
   select (payment,part_a,part_b_phys,part_b_phys) %>% 
-  ggplot(aes(x=payment ) )+
+  ggplot(aes(x=payment) )+
   geom_histogram(color="#e9ecef", alpha=0.6, position = 'identity', bins=40) +
   scale_x_log10()+
 scale_fill_manual(values=c("#69b3a2", "#404080")) +
@@ -328,13 +335,13 @@ scale_fill_manual(values=c("#69b3a2", "#404080")) +
 ```{r}
 #make this interactive
 p<- ggplot(dci_data_ws,aes(x=payment,y=..density..)) +
-  geom_histogram(bins=40,binwidth = 0.05,fill = "grey",color="black") +
+  geom_histogram(bins=40,binwidth = 0.05,fill = "black",color="black",alpha=0.2) +
   scale_x_log10()+
 geom_density(color = "red")+
- labs(x="loggged payment values",
+ labs(x="Logged payments",
       y="Frequency",
-      title = "Payment distribution")
-p
+      title = "Total Payments distribution")
+ggplotly(p)
 
 
 
@@ -350,7 +357,7 @@ p<- ggplot(dci_data_ws,aes(x=payment,fill=modality)) +
 p
 
 ```
-
+Modality distributions
 ```{r}
 #density distribution for modalities
 ggplot(dci_data_ws,aes(payment, color = modality,fill=modality)) +
@@ -397,7 +404,7 @@ dci_data_ws %>%
 dci_data_ws %>% 
 select(payment,modality) %>% 
 #filter(payment>2800 & payment <3500) %>% 
-  group_by(modality) %>% 
+  group_by(modality) 
   
 
 
@@ -407,7 +414,7 @@ select(payment,modality) %>%
 dci_data_ws %>% 
   select(payment,modality) %>% 
   filter(payment>2800 & payment <3500) %>% 
-  group_by(payment,modality) %>% 
+  #group_by(modality) %>% 
   filter(modality=='PD') %>% 
   ggplot(aes(x=payment)) +
   geom_histogram(binwidth = 4000)
@@ -444,24 +451,32 @@ d <- density(x)
 lines(x = d$x, y = d$y * length(x) * diff(h$breaks)[1], lwd = 2)
 lines(x = d$x, y = cumsum(d$y)/max(cumsum(d$y)) * length(x), lwd = 2)
 ```
+
 ```{r}
-dci_payments_pivot<-dci_data_ws %>% 
-        select(payment,part_a,part_b_dme,part_b_phys) %>% 
-  pivot_longer(payment:part_b_phys,names_to="payment_type",values_to = "payment") 
+#distribution by payment type
+ payment_type_dist<-dci_data_ws %>% 
+                      select(dos_year,dos_month,payment,part_a,part_b_dme,part_b_phys,part_b)%>% 
+                       pivot_longer(payment:part_b,names_to="payment_type",values_to = "payment") 
+
+saveRDS(payment_type_dist,file="payment_type_dist.rds")
 ```
 
 
-
 ```{r}
-dci_payments_pivot %>% 
-  ggplot( aes(x=payment,fill=payment_type,color=payment_type)) +
-  geom_histogram(bins= 40,binwidth = 0.05,alpha=0.3,position = "identity")+
-    scale_x_log10()+
-  geom_vline(aes(xintercept = mean(payment,na.rm=T)),
-             color = "red", linetype = "dashed",size = 1)+
-  labs(x="loggged payment values",
-      y="Frequency",
-      title = "distribution of payments across payment sources")
+#plot the fequency distribution across different payment types
+  
+  pl<-dci_data_ws %>% 
+        select(dos_year,dos_month,location_id,payment,part_a,part_b_dme,part_b_phys,part_b)%>% 
+        pivot_longer(payment:part_b,names_to="payment_type",values_to = "payment") %>% 
+        filter(dos_year==2017 & dos_month==1) %>% 
+        ggplot( aes(x=payment,fill=payment_type,color= payment_type)) +
+        geom_histogram(bins= 40,binwidth = 0.05,alpha=0.3,position = "identity") +
+        scale_x_log10() +
+  geom_vline(aes(xintercept = mean(payment,na.rm=T)),color = "red", linetype = "dashed",size = 1) +
+  labs(x="Logged payments",y="Frequency",title = "distribution of payments across payment sources") 
+        
+ggplotly(pl)
+
 ```
  
 ```{r}
@@ -471,12 +486,18 @@ sum(is.na(dci_data$payment))
 
 ```{r}
 #fat tailed dis. 
-dci_payments_pivot %>% 
+box_pl<-payment_type_dist %>% 
+  filter(dos_year == 2017 & dos_month == 1) %>% 
   ggplot(aes(y = payment,x = payment_type,fill=payment_type)) +
   geom_boxplot()+
-    scale_y_log10()
+  #  scale_y_log10() +
+  theme_classic() +
+  labs(x="Payment type", y = "Payment",
+       title = "Payment distribution by payment types")
  
+ggplotly(box_pl)
 ```
+
  
 ```{r}
 
@@ -554,9 +575,7 @@ corrplot(corrs,type = "upper",order = "hclust",
   
  
 ```
-```{r}
- 
-```
+
 
 ```{r}
 tibble('variable' = corrs[1,2:12] %>% names(),'correlation' = corrs[1,2:12]) %>% 
@@ -569,11 +588,12 @@ tibble('variable' = corrs[1,2:12] %>% names(),'correlation' = corrs[1,2:12]) %>%
 
 
 ```{r}
-ggplot(dci_data_ws, aes(x=albumin,y=payment) ) +
+pl <- ggplot(dci_data_ws, aes(x=albumin,y=payment) ) +
   geom_point(alpha=0.2) + geom_smooth(method = 'lm') +
   scale_x_log10() +
   scale_y_log10()
 
+ggplotly(pl)
 ```
 ```{r}
 #unique(dci_data_ws$ktv)
@@ -593,5 +613,48 @@ ggplot(dci_data_ws, aes(x=ca,y=payment) ) +
   scale_x_log10() +
   labs(x="ca", y = "payment", title = "Payment Vs ca")
 
+```
+Maps
+```{r}
+#first prep the dataset to get the information on the map markers
+
+ payment_summary_by_loc<-dci_data_ws %>% 
+  select(patient_id,location_id,dos_month,dos_year,payment,part_a,part_b_phys,part_b_dme,modality) %>% 
+  group_by(location_id,dos_month,dos_year,modality) %>% 
+  summarise(
+            total_patients = NROW(patient_id),
+            totalpayments = round(sum(payment),digits=2),
+            min_pay = min(payment),
+            max_pay = max(payment),
+            avg_pay = sum(payment)/NROW(patient_id)) %>% 
+  ungroup() %>%
+  arrange(dos_year,dos_month)  
+
+#merge the grouped data with location dataset
+payment_geom_summary <- merge(payment_summary_by_loc,locations,by = "location_id")
+
+#save it to rds file
+saveRDS(payment_geom_summary, file = "payment_geom_summary.rds")
+
+ 
+```
+
+```{}
+```
+
+```{r}
+leaflet(data= locations) %>% 
+  addTiles() %>% 
+  addMarkers(~longitude,
+             ~latitude,
+             popup = ("hello"))
+```
+```{r}
+pl <- ggplot(dci_data_ws, aes(x=albumin,y=payment) ) +
+  geom_point(alpha=0.2) + geom_smooth(method = 'lm') +
+  scale_x_log10() +
+  scale_y_log10()
+
+ggplotly(pl)
 ```
 
