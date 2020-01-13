@@ -27,6 +27,7 @@ shinyServer(function(input, output) {
         ~ latitude,
          
         popup = paste(tags$b("Clinic Name:"), payment_geom_summary_w$short_name, "<br>",
+                      tags$b("Clinic ID:"), payment_geom_summary_w$location_id, "<br>",
                       tags$b("Address:"), payment_geom_summary_w$location_address_1, "<br>",
                       tags$b("Total Payments:"), paste("$",round(payment_geom_summary_w$totalpayments,digits = 2)), "<br>",
                       tags$b("Avg Payments:"), paste("$",round(payment_geom_summary_w$avg_pay,digits=2)), "<br>",
@@ -97,13 +98,17 @@ shinyServer(function(input, output) {
     #Features
     output$features <- renderPlotly({
       
-     features_pl<- ggplot(dci_data_shiny, aes(x=input$sel_features,y=payment) ) +
+     features_pl<- dci_data_shiny %>%
+                    mutate(payment = payment,xvariable=input$sel_features) %>%
+                    filter(xvariable!=0) %>%
+                             ggplot(aes(x=xvariable,y=payment) ) +
                    geom_point(alpha=0.4) + geom_smooth(method = 'lm') +
-                   scale_x_log10() +
-                   scale_y_log10() +
+                   #scale_x_log10() +
+                   #scale_y_log10() +
                    labs(x=input$sel_features, y = "payment", title = paste("Payment Vs ",input$sel_features))
        
       ggplotly(features_pl)
+   
      
         })
     

@@ -40,7 +40,7 @@ shinyUI(
     dashboardBody(
       
       tabItems(
-        tabItem(tabName = "introduction",
+        tabItem(tabName = "Introduction",
                 fluidRow(
                         box(h2("first tab"))
                        )
@@ -67,7 +67,7 @@ shinyUI(
         tabItem(tabName = "modality",
                 h1("Modality Analysis")),
         tabItem(tabName = "feature_tab",
-                tabBox(
+                tabBox(width = 12,
                   tabPanel(title = "Plot",plotlyOutput("features")),
                   tabPanel(title = "second Tab")
                   

@@ -18,7 +18,7 @@ payment_type_dist_shiny <- readRDS('data/payment_type_dist.rds')
                     
 dci_data_shiny <-readRDS('data/dci_data.rds')
 
-modality <- c('HIC','PD','HH')
+modality <- c('Hemo In-Center','PD','Hemo Home')
 
 features_shiny <- names(dci_data_shiny) 
 features_shiny_df <-as.data.frame( features_shiny[37:47])

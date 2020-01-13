@@ -34,7 +34,7 @@ summary_wds<-summary_raw_data
 #detail_raw_data<-read_csv ('data/claim_details.csv' )
 ```
 ```{r}
-locations<-read_csv('data/ESCO_LOCATIONS_lo.csv' )
+locations<-read_csv('data/ESCo_LOCATIONS_lo.csv' )
 ```
 INITIAL ANALYSIS WITH THE SUMMARY DATA ONLY.
  
@@ -512,7 +512,7 @@ pl <- ggplot( years_plot,aes(y=sum_pay, x = dos_month ,fill=dos_year)) +
   ggtitle("Total payments increase in each month")
        
 pl
-year_plot
+years_plot
   
 ```
 
@@ -620,7 +620,7 @@ Maps
 
  payment_summary_by_loc<-dci_data_ws %>% 
   select(patient_id,location_id,dos_month,dos_year,payment,part_a,part_b_phys,part_b_dme,modality) %>% 
-  group_by(location_id,dos_month,dos_year,modality) %>% 
+  group_by(location_id,dos_month,dos_year ) %>% 
   summarise(
             total_patients = NROW(patient_id),
             totalpayments = round(sum(payment),digits=2),
@@ -633,13 +633,17 @@ Maps
 #merge the grouped data with location dataset
 payment_geom_summary <- merge(payment_summary_by_loc,locations,by = "location_id")
 
+payment_geom_summary %>%
+  filter(location_id =='000055' & dos_month ==1 & dos_year ==2017)
+  
 #save it to rds file
-saveRDS(payment_geom_summary, file = "payment_geom_summary.rds")
+saveRDS(payment_geom_summary, file = "DCI_midcourse/data/payment_geom_summary.rds")
 
  
 ```
 
-```{}
+```{r}
+
 ```
 
 ```{r}
