@@ -1,0 +1,5 @@
+"0",""
+"0","summary_wds %>% "
+"0","  select (-esco_id,-bene_hic_num,-esco_aligned_flag) %>% "
+"0","  filter(patient_id == '811454') %>% "
+"0","  arrange(dos_year,dos_month)"

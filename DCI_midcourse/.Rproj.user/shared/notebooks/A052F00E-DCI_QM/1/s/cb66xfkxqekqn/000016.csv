@@ -1,0 +1,4 @@
+"0",""
+"0","## Plot the density and cumulative density"
+"0","d <- density(x)"
+"0","lines(x = d$x, y = d$y * length(x) * diff(h$breaks)[1], lwd = 2)"

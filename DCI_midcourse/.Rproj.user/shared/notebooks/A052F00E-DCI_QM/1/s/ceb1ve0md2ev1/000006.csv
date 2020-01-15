@@ -1,0 +1,5 @@
+"0","leaflet(data= locations) %>% "
+"0","  addTiles() %>% "
+"0","  addMarkers(~longitude,"
+"0","             ~latitude,"
+"0","             popup = (""hello""))"

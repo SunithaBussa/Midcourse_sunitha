@@ -1,0 +1,4 @@
+"0","dci_data_ws %>% "
+"0","  select(location_id,dos_year,dos_month,payment,part_a,part_b) %>% "
+"0","  mutate(percentage_a = round(part_a/payment*100),"
+"0","         percentage_b = round(part_b/payment*100))"

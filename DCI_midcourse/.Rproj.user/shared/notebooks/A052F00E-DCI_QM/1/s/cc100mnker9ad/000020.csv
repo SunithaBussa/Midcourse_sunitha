@@ -1,0 +1,11 @@
+"0","#Top 5 locations with high average payments"
+"0",""
+"0","loc_plt<-payment_summary_by_loc %>% "
+"0","  arrange(desc(totalpayments)) %>% "
+"0","  filter(dos_year==2017 & dos_month == 4) %>% "
+"0","  top_n(5) %>% "
+"0","  ggplot(aes(x=location_id,y=avg_pay)) +"
+"0","  geom_col( )"
+"2","Selecting by avg_pay
+"
+"0","ggplotly(loc_plt)"
