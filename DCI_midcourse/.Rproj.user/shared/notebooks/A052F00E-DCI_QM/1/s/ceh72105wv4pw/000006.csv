@@ -1,7 +1,0 @@
-"0","library(reshape2)"
-"0","dci_long <- reshape2::melt(dci_data_ws)"
-"2","Using patient_id, dos_year, dos_month, location_id, modality, epo_protocol_flag, iron_protocol_flag, nutsup_protocol_flag, sup_name, tx, tx_epo, venofer_given, ferrlecit_given, feraheme_given, zemplar_iv_given, hectorol_iv_given, calcijex_iv_given, zemplar_or_given, hectorol_or_given, calcijex_or_given, activase_given, prostat_given, nepro_given, liquacel_given, has_catheter, aranesp_given, protinex_given, hgb_exclude_flag, mircera_given, sensipar_given, parsabiv_given, protein_bar_given, ice_cream_given, gelatein_given, active_flag as id variables
-"
-"2","attributes are not identical across measure variables; they will be dropped"
-"0","ggplot(dci_long, aes(value)) + facet_wrap(~variable, scales = 'free_x') +"
-"0","  geom_histogram()"

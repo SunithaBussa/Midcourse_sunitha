@@ -13,6 +13,7 @@ library(shiny)
 # Define server logic required to draw a histogram
 shinyServer(function(input, output) {
   
+  #plot map
   output$mymap <- renderLeaflet({
   
     payment_geom_summary_w <- payment_geom_summary %>%
@@ -21,6 +22,7 @@ shinyServer(function(input, output) {
     
       leaflet(data = payment_geom_summary_w) %>%
       addTiles() %>%
+      setView(-79.96,40.68,zoom=9) %>%
      
       addMarkers(
         ~ longitude,
@@ -41,18 +43,18 @@ shinyServer(function(input, output) {
   
 
     output$distPlot <- renderPlotly({
-      #plot histogram based on year and month
-    
+     
+     #plot box plots based on year and month
+        box_pl<-payment_type_dist_shiny %>% 
+                filter(dos_year == input$summary_year & dos_month == input$summary_month_slider) %>% 
+                ggplot(aes(y = payment,x = payment_type,fill=payment_type)) +
+                geom_boxplot(alpha=0.4)+
+                theme_classic() +
+                labs(x="Payment type", y = "Payment",
+                title = paste("Distribution by Payment Types"))+
+                theme(axis.text.x = element_text(angle=45,hjust=1),legend.title = element_blank())
       
-      box_pl<-payment_type_dist_shiny %>% 
-        filter(dos_year == input$summary_year & dos_month == input$summary_month_slider) %>% 
-        ggplot(aes(y = payment,x = payment_type,fill=payment_type)) +
-        geom_boxplot(alpha=0.4)+
-        theme_classic() +
-        labs(x="Payment type", y = "Payment",
-             title = paste("Distribution by Payment Types"))
-      
-      ggplotly(box_pl)
+      ggplotly(box_pl) 
         
         
 
@@ -84,7 +86,7 @@ shinyServer(function(input, output) {
                                     summarise(formatC(as.numeric(sum(payment)), format="f", digits=2, big.mark=","))
                                      ),style = "font-size: 50%;" ),
                 
-                  subtitle = paste("Total Payments for ",input$summary_year),color="black")
+                  subtitle = paste("Total Payments for ",input$summary_year),color="fuchsia")
         
     })
     
@@ -97,7 +99,7 @@ shinyServer(function(input, output) {
                                    ),style = "font-size: 50%;" 
                             ),
                
-               subtitle = paste("Total part_a payments for ",input$summary_year),color="black")
+               subtitle = paste("Part A payments for ",input$summary_year),color="orange")
       
     })
     
@@ -110,11 +112,11 @@ shinyServer(function(input, output) {
                                     summarise(formatC(as.numeric(sum(part_b)), format="f", digits=2, big.mark=","))
                                   ),style = "font-size: 50%;" ),
                
-               subtitle = paste("Total part_a payments for ",input$summary_year),color="black")
+               subtitle = paste("Part B payments for ",input$summary_year),color="teal")
       
     })
     
-    #Features
+    #Features /labs
     output$features <- renderPlotly({
       
      features_pl<- dci_data_shiny %>% 
@@ -151,29 +153,51 @@ shinyServer(function(input, output) {
     output$raw_data_table <- DT:: renderDataTable({
       
       DT::datatable( dci_data_shiny %>% 
-                       select(dos_month,dos_year,location_id,patient_id,payment,part_a,part_b,part_b_dme,part_b_phys) %>% 
+                       select(dos_month,dos_year,location_id,patient_id,payment,part_a,part_b,inpatient,outpatient_dialysis,modality) %>% 
                        filter(dos_month==input$data_month_slider &
                                 dos_year==input$data_year)
                      )
       
     })
     
-    
+    #Locations bar charts
     output$payments_by_locPlot <- renderPlotly({
-      
-      #top 5 location 
-                  loc_plt<-payment_geom_summary %>% 
-                  arrange(desc(totalpayments)) %>% 
-                  filter(dos_year==input$loc_year & dos_month == input$loc_month_slider) %>% 
-                  top_n(5) %>% 
-                  ggplot(aes(x=reorder(location_id,avg_pay), y=avg_pay)) +
-                  geom_bar(stat="identity",aes(fill=-avg_pay))+
-                    labs(x="location ID's",
-                         y="Average Payments",
-                        title = paste("Top 5 locations by payments")) 
-                    
-                
+  
+                   loc_plt <- payment_geom_summary %>% 
+                              arrange(desc(totalpayments)) %>% 
+                              filter(dos_year==input$loc_year & dos_month == input$loc_month_slider) %>% 
+                              plot_ly( 
+                                      source="myClickSource",
+                                      x = ~location_id,
+                                      y = ~avg_pay,
+                                      type = "bar"
+                                     ) 
+               
                 ggplotly(loc_plt)
+    })
+    
+    SelectedBar <- reactiveVal(NULL)
+    
+    observe({
+      myClicks <- event_data("plotly_click", source = "myClickSource")
+      req(myClicks)
+      print(myClicks)
+      SelectedBar(toString(myClicks$x))
+    })
+    
+    output$pay_detail_locTable <-renderDataTable({
+      
+      
+      DT::datatable(  
+                     
+                    data<-as.data.frame( dci_data_shiny[which(dci_data_shiny$location_id == SelectedBar() & dci_data_shiny$dos_year==input$loc_year & dci_data_shiny$dos_month ==input$loc_month_slider ),
+                                    names(dci_data_shiny) %in% c("location_id","patient_id","payment","part_a","part_b","inpatient","outpatient_dialysis")])
+                    
+                     
+                    )
+      
+     # payment_geom_summary
+      
     })
     
 })

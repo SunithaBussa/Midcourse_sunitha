@@ -1,8 +1,0 @@
-"0","#redo this with non summarize raw data"
-"0",""
-"0","plbox <- ggplot(year_plot,aes(y=sum_pay, x = dos_month) )+"
-"0","  geom_boxplot() +"
-"0","  labs(x=""Months"", y= ""Payments"") +"
-"0","  ggtitle(""T"")"
-"0","       "
-"0","plbox"

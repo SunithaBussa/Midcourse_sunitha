@@ -1,7 +1,0 @@
-"0","#frequency distribution with density lines"
-"0","#x<- sample(0:30, 200, replace=T, prob=15 - abs(15 - 0:30))"
-"0","x<-dci_data_ws$payment"
-"0","## Calculate and plot the two histograms"
-"0","hcum <- h <- hist(x, plot=FALSE)"
-"0","hcum$counts <- cumsum(hcum$counts)"
-"0","plot(hcum, main="""")"

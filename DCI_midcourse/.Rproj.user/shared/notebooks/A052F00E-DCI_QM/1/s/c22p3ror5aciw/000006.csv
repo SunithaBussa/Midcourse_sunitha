@@ -1,7 +1,0 @@
-"0","dci_data_ws  %>% "
-"0","  ggplot(aes(x=dos_year,y=payment,color = modality)) +"
-"0","    geom_boxplot() +"
-"0","  scale_y_log10() +"
-"0","  labs(x = ""Years"",y=""payments"", "
-"0","       title = ""Payments in in 2017 and 2018"")"
-"0",""

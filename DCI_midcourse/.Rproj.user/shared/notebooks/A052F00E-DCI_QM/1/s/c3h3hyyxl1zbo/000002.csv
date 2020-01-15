@@ -1,6 +1,0 @@
-"0","#distribution by payment type"
-"0"," payment_type_dist<-dci_data_ws %>% "
-"0","                      select(dos_year,dos_month,payment,part_a,part_b_dme,part_b_phys,part_b)%>% "
-"0","                       pivot_longer(payment:part_b,names_to=""payment_type"",values_to = ""payment"") "
-"0",""
-"0","saveRDS(payment_type_dist,file=""payment_type_dist.rds"")"

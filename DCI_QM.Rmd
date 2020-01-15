@@ -455,10 +455,10 @@ lines(x = d$x, y = cumsum(d$y)/max(cumsum(d$y)) * length(x), lwd = 2)
 ```{r}
 #distribution by payment type
  payment_type_dist<-dci_data_ws %>% 
-                      select(dos_year,dos_month,payment,part_a,part_b_dme,part_b_phys,part_b)%>% 
-                       pivot_longer(payment:part_b,names_to="payment_type",values_to = "payment") 
+                      select(dos_year,dos_month,payment,part_a,part_b,inpatient,outpatient_dialysis)%>% 
+                       pivot_longer(payment:outpatient_dialysis,names_to="payment_type",values_to = "payment") 
 
-saveRDS(payment_type_dist,file="payment_type_dist.rds")
+saveRDS(payment_type_dist,file="DCI_midcourse/data/payment_type_dist.rds")
 ```
 
 

@@ -1,4 +1,0 @@
-"0","#Get the data with all the required fields for analysis"
-"0","#claim_detail_raw_data<-fread(""data/claim_details.csv"",sep = ""|"",fill = T)"
-"0",""
-"0","#detail_raw_data<-read_csv ('data/claim_details.csv' )"

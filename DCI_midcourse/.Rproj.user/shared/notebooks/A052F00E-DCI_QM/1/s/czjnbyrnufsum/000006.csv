@@ -1,7 +1,0 @@
-"0","num_columns <- c(""payment"",""hgb"",""tsat"",""ferr"",""albumin"",""pth"",""ca"",""cca"",""ph"",""k"",""urr"",""ktv"")"
-"0","corrs<-dci_data_ws %>% select(num_columns)  %>% "
-"0","cor()"
-"0",""
-"0",""
-"0","corrplot(corrs,type = ""upper"",order = ""hclust"","
-"0","         tl.col=""black"",tl.srt=45)"

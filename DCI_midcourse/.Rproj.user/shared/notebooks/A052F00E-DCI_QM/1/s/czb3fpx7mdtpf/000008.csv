@@ -1,5 +1,0 @@
-"0","  "
-"0","#save it to rds file"
-"0","saveRDS(payment_geom_summary, file = ""DCI_midcourse/data/payment_geom_summary.rds"")"
-"0",""
-"0"," "

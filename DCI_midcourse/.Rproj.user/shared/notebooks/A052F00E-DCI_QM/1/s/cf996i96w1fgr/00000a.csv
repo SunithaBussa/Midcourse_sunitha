@@ -1,6 +1,0 @@
-"0",""
-"0","ggplot(dci_data_ws, aes(x=ca,y=payment) ) +"
-"0","  geom_point() + geom_smooth(method = 'lm') +"
-"0","  scale_x_log10() +"
-"0","  labs(x=""ca"", y = ""payment"", title = ""Payment Vs ca"")"
-"0",""

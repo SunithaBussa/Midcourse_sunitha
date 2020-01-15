@@ -1,7 +1,0 @@
-"0","#unique(dci_data_ws$ktv)"
-"0","#hgb vs payment"
-"0",""
-"0","ggplot(dci_data_ws, aes(x=hgb,y=payment) ) +"
-"0","  geom_point() + geom_smooth(method = 'lm') +"
-"0","  scale_x_log10() +"
-"0","  labs(x=""hgb"", y = ""payment"", title = ""Payment Vs hgb"")"

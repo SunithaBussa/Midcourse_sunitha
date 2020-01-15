@@ -11,7 +11,7 @@ library(shiny)
 library(shinythemes)
  
 dbHeader <- dashboardHeader()
-dbHeader$children[[3]]$children <- tags$h2(tags$img(src='kidney-bean.png',height='40',width='50'),"Welcome to Dialysis Clinic Incorporation",align = "middle")
+dbHeader$children[[3]]$children <-tags$p( tags$h2(tags$img(src='kidney-bean.png',height='40',width='50'),tags$b("Welcome to Dialysis Clinic Incorporation"),align = "middle"),style = "font-size:50%;")
 dbHeader$children[[2]]$children <-  tags$a(href='http://www.dciinc.org',
                                            tags$img(src='DCI_logo.png',height='40',width='190'))
 
@@ -33,13 +33,13 @@ shinyUI(
                            sliderInput("summary_month_slider","Pick Month",1,12,1)),
         
           menuSubItem("Location Payments", tabName = "locations_pay",icon = icon("location-arrow")),
-          conditionalPanel("input.sidebarmenu=='locations_pay'",
+                  conditionalPanel("input.sidebarmenu=='locations_pay'",
                          selectInput("loc_year","Pick Year",choices = c(2017,2018)),
                          sliderInput("loc_month_slider","Pick Month",1,12,1)),
         
         menuItem("Modalities",tabName = "modality",icon = icon("procedures")),
         
-        menuItem("Features",tabName = "feature_tab",icon = icon("diagnoses")),
+        menuItem("Labs",tabName = "feature_tab",icon = icon("diagnoses")),
           conditionalPanel("input.sidebarmenu=='feature_tab'",
                          selectInput("sel_features","Select Feature",choices = features_shiny_df$`features_shiny[37:47]`)
                           ) ,
@@ -75,31 +75,32 @@ shinyUI(
                 ),
         tabItem(tabName = "summary",
                 
-                tags$head(tags$style(HTML(".small-box {height: 90px}"))),
+                tags$head(tags$style(HTML(".small-box {height: 60px}"))),
                 
                 #header and value boxes
                      fluidRow(
                               column(6,h2("Payment Summary Analysis")),
-                              column(2,offset = 0.5,valueBoxOutput("vbox1", width = NULL)),
+                              column(2,offset=0.5,valueBoxOutput("vbox1",width=NULL)),
                               column(2,offset=0.5,valueBoxOutput("vbox2",width=NULL)),
                               column(2,offset=0.5,valueBoxOutput("vbox3",width=NULL))
                              ),
                #Map
                     fluidRow(
-                             box(width = NULL, solidHeader = TRUE,leafletOutput("mymap"))
+                             box(width = 12, solidHeader = TRUE,leafletOutput("mymap"))
                              ),
                
               #Boxplots and Histogram
                     fluidRow(
-                             column (6,height='20px',box(width=100, solidHeader = TRUE, plotlyOutput("distPlot"))),
-                             column(6,height='20px',box(width=500, solidHeader = TRUE, plotlyOutput("payment_type_distPlot")))
+                             column (6,height='10px',box(width=100, solidHeader = TRUE, plotlyOutput("distPlot"))),
+                             column(6,height='10px',box(width=500, solidHeader = TRUE, plotlyOutput("payment_type_distPlot")))
                             )
                 ),
         
-        #Top 5 Locations plot
+        # Locations bar graph and data
                 tabItem(tabName = "locations_pay",
-                fluidRow(
-                        column(width = 7,plotlyOutput("payments_by_locPlot"))
+                fluidRow(height=200,
+                        column(width = 12,plotlyOutput("payments_by_locPlot")),
+                        column(width = 12,dataTableOutput("pay_detail_locTable"))
                         )
                 ),
         tabItem(tabName = "modality",
@@ -122,13 +123,23 @@ shinyUI(
                 )),
         tabItem(tabName = "keywords",
                 tags$h2("Key Words:"),
-                tags$p("part a: Medicare Part A is hospital insurance. Part A generally covers inpatient hospital stays, skilled nursing care, hospice care, and limited home health-care services."),
-                tags$p("part b: Medicare Part B is medical insurance. Part A generally covers services like flushots, supplies,Physical therapy etc."),
-                tags$p("part b DME:Medicare Part B covers (Durable Medical Equipment ) like walkers, wheelchairs, or hospital beds"),
-                tags$p("part b phy:Medicare Part B covers outpatient therapy, including physical therapy (PT), speech-language pathology (SLP), and occupational therapy (OT)"),
-                tags$p("Hemo In-Center(HIC): In-center hemodialysis is when a person goes to a dialysis center for their hemodialysis treatments. Hemodialysis is a treatment that filters the blood of wastes and extra fluid when the kidneys are no longer able to perform this function."),
-                tags$p("Peritoneal dialysis (PD) :PD is a treatment that uses the lining of your abdomen (belly area), called your peritoneum, and a cleaning solution called dialysate to clean your blood. Dialysate absorbs waste and fluid from your blood, using your peritoneum as a filter. One benefit of PD is that it is not done in a dialysis center. You can do your PD treatments any place that is clean and dry."),
-                tags$p("Hemo Home(HH): HH is a treatment that uses the lining of your abdomen (belly area), called your peritoneum, and a cleaning solution called dialysate to clean your blood. Dialysate absorbs waste and fluid from your blood, using your peritoneum as a filter. One benefit of PD is that it is not done in a dialysis center. You can do your PD treatments any place that is clean and dry."),
+                tags$p(strong("Part A"),": Medicare Part A is hospital insurance. Part A generally covers inpatient hospital stays, skilled nursing care, hospice care, and limited home health-care services."),
+                tags$p(strong("Part B"),": Medicare Part B is medical insurance. Part A generally covers services like flushots, supplies,Physical therapy etc."),
+                tags$p(strong("Part B DME"),":Medicare Part B covers (Durable Medical Equipment ) like walkers, wheelchairs, or hospital beds"),
+                tags$p(strong("Part B phy"),":Medicare Part B covers outpatient therapy, including physical therapy (PT), speech-language pathology (SLP), and occupational therapy (OT)"),
+                tags$p(strong("Hemo In-Center(HIC)"),": In-center hemodialysis is when a person goes to a dialysis center for their hemodialysis treatments. Hemodialysis is a treatment that filters the blood of wastes and extra fluid when the kidneys are no longer able to perform this function."),
+                tags$p(strong("Peritoneal dialysis (PD)")," :PD is a treatment that uses the lining of your abdomen (belly area), called your peritoneum, and a cleaning solution called dialysate to clean your blood. Dialysate absorbs waste and fluid from your blood, using your peritoneum as a filter. One benefit of PD is that it is not done in a dialysis center. You can do your PD treatments any place that is clean and dry."),
+                tags$p(strong("Hemo Home(HH)"),": HH is a treatment that uses the lining of your abdomen (belly area), called your peritoneum, and a cleaning solution called dialysate to clean your blood. Dialysate absorbs waste and fluid from your blood, using your peritoneum as a filter. One benefit of PD is that it is not done in a dialysis center. You can do your PD treatments any place that is clean and dry."),
+                tags$p(strong("hgb"),": Hemoglobin Range(10-11)"),
+                tags$p(strong("ferr"),": Ferritin/Iron >100 ng/mL"),
+                tags$p(strong("albumin"),": Serum albumin > 4.0 g/dl"),
+                tags$p(strong("pth"),": Parathyroid harmone Range(10-65)"),
+                tags$p(strong("ca"),": Calcium(3.0-5.5)"),
+                tags$p(strong("cca"),": Serum corrected calcium(8-9)"),
+                tags$p(strong("ph"),": Acid balance <7.30"),
+                tags$p(strong("k"),": Potassium Range(3.5-5.5)"),
+                tags$p(strong("Urr"),": Urea reduction Ratio > 65%"),
+                tags$p(strong("ktv"),": Clearance * times / volume >2")
                 
         )
       )

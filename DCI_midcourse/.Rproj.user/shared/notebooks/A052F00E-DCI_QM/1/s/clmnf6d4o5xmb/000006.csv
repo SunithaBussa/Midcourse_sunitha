@@ -1,4 +1,0 @@
-"0","dci_data_ws %>% "
-"0","select(payment,modality) %>% "
-"0","#filter(payment>2800 & payment <3500) %>% "
-"0","  group_by(modality) "

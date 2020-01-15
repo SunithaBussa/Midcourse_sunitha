@@ -1,5 +1,0 @@
-"0","year_plot<- summary_wds %>% "
-"0","  group_by(dos_year,dos_month) %>% "
-"0","  summarise(sum_pay = sum(payment)) %>% "
-"0","  ungroup()  "
-"0","year_plot"
