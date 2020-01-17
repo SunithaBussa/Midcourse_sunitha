@@ -1,0 +1,4 @@
+"0","dci_data_ws %>% "
+"0","  select(payment,modality) %>% "
+"0","  group_by(modality) %>% "
+"0","  summarise(total_payments=sum(payment),num_of_rows=n())"

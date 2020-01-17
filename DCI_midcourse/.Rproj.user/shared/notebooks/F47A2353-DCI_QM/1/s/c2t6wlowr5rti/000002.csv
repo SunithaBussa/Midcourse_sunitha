@@ -1,0 +1,7 @@
+"0","ggplotly(dci_data_ws %>% "
+"0","  group_by(modality,dos_month,dos_year) %>% "
+"0","  summarise(payments = sum(payment)) %>%  "
+"0","  ungroup() %>% "
+"0"," # ggplot(aes(x=modality,y=payments,fill = `dos_year`)) +"
+"0","     ggplot(aes(x=dos_month,y=payments,fill = `modality`)) +"
+"0","  geom_bar(stat=""identity"",position=""dodge"" ) )"

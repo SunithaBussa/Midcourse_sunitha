@@ -1,0 +1,4 @@
+"0","dci_data_ws %>% "
+"0","  select(dos_year,dos_month,payment,part_a,part_b) %>% "
+"0","  mutate(percent_part_a = round(part_a/payment*100)) %>% "
+"0","  filter(dos_year==2017,dos_month==1)"

@@ -1,0 +1,3 @@
+"0","payment_geom_summary %>% "
+"0","  arrange(desc(totalpayments)) %>% "
+"0","  filter(dos_year==2017 & dos_month == 1)"

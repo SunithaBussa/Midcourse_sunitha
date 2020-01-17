@@ -1,0 +1,2 @@
+"0","dci_data_shiny %>% "
+"0","  select (location_id,patient_id,payment,part_a,part_b,modality)"

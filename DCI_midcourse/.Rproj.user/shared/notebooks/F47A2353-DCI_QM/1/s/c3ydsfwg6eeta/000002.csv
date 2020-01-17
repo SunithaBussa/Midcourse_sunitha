@@ -1,0 +1,8 @@
+"0","dci_data_ws %>% "
+"0","  select(payment,modality) %>% "
+"0","  filter(modality == 'HH') %>% "
+"0","   ggplot(aes(x=payment)) +"
+"0","  geom_histogram() +"
+"0","  labs(x=""payments"","
+"0","       y=""frequency"","
+"0","       title = ""Distribution of Hemo Home Payments"")"

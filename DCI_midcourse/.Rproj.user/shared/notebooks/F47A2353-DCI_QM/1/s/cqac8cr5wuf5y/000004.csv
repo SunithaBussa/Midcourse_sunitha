@@ -1,0 +1,7 @@
+"0","#density distribution for modalities"
+"0","ggplot(dci_data_ws,aes(payment, color = modality,fill=modality)) +"
+"0","  scale_x_log10()+"
+"0","  geom_density(alpha = 0.8,position = ""dodge"") +"
+"0","  labs(x=""Payments"","
+"0","       y=""Density"","
+"0","       title=""Distribution on payments by modality"")"

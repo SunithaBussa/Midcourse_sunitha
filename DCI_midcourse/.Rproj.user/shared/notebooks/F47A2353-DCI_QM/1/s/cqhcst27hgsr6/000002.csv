@@ -1,0 +1,15 @@
+"0","#Get only the Summary data for some initial analysis"
+"0",""
+"0","summary_raw_data<-read_csv ('data/claim_summary_v1.csv' )"
+"2","Parsed with column specification:
+cols(
+  .default = col_double(),
+  esco_id = [31mcol_character()[39m,
+  bene_hic_num = [31mcol_character()[39m,
+  claim_first_dialysis_date = [31mcol_character()[39m,
+  claim_last_dialysis_date = [31mcol_character()[39m
+)
+"
+"2","See spec(...) for full column specifications.
+"
+"0","summary_wds<-summary_raw_data"

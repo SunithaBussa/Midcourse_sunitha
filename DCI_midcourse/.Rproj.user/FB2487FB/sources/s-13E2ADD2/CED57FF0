@@ -1,0 +1,26 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1579135090856.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "0",
+    "id" : "CED57FF0",
+    "lastKnownWriteTime" : 1579200817,
+    "last_content_update" : 1579200817345,
+    "path" : "~/NSS/GitRepo/Midcourse_sunitha/DCI_midcourse/global.R",
+    "project_path" : "global.R",
+    "properties" : {
+        "cursorPosition" : "8,19",
+        "scrollLine" : "0",
+        "tempName" : "Untitled1"
+    },
+    "read_only" : false,
+    "read_only_alternatives" : [
+    ],
+    "relative_order" : 2,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}
